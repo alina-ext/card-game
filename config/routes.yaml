@@ -1,0 +1,68 @@
+catalog_card_add:
+  path: /cards
+  controller: App\Application\Catalog\CardController::add
+  methods: POST
+
+catalog_card_get:
+  path: /cards/{card_id}
+  controller: App\Application\Catalog\CardController::getItem
+  methods: GET
+  requirements:
+    product_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+
+catalog_card_list:
+  path: /cards/{page_id}
+  controller: App\Application\Catalog\CardController::list
+  methods: GET
+  defaults:
+    page_id: 1
+  requirements:
+    page_id: '\d*'
+
+catalog_card_update:
+  path: /cards/{card_id}
+  controller: App\Application\Catalog\CardController::update
+  methods: PATCH
+  requirements:
+    product_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+
+catalog_card_delete:
+  path: /cards/{card_id}
+  controller: App\Application\Catalog\CardController::delete
+  methods: DELETE
+  requirements:
+    id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+
+deck_add:
+  path: /decks
+  controller: App\Application\Cart\DeskController::add
+  methods: POST
+
+deck_get:
+  path: /decks/{deck_id}
+  controller: App\Application\Cart\DeskController::getItems
+  methods: GET
+  requirements:
+    deck_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+
+deck_delete:
+  path: /decks/{deck_id}
+  controller: App\Application\Cart\DeskController::delete
+  methods: DELETE
+  requirements:
+    deck_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+
+deck_card_add:
+  path: /decks/{deck_id}/cards
+  controller: App\Application\Cart\DeskController::addItem
+  methods: POST
+  requirements:
+    deck_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+
+deck_card_delete:
+  path: /decks/{deck_id}/cards/{card_id}
+  controller: App\Application\Cart\DeskController::deleteItem
+  methods: DELETE
+  requirements:
+    deck_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+    product_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
