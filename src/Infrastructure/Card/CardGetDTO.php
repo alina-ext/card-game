@@ -2,10 +2,12 @@
 
 namespace App\Infrastructure\Card;
 
+use App\Domain\Card\Exceptions\ValidationException;
+use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CardGetDTO
+class CardGetDTO implements CardDTOInterface
 {
 	/**
 	 * @Assert\Uuid
@@ -17,7 +19,12 @@ class CardGetDTO
 
 	public function __construct(string $id)
 	{
-		$this->id = Uuid::fromString($id);
+		try {
+			$id = Uuid::fromString($id);
+		} catch (InvalidArgumentException $e) {
+			throw new ValidationException($e->getMessage());
+		}
+		$this->id = $id;
 	}
 
 	public function getId(): Uuid

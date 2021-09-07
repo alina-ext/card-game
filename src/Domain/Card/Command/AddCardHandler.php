@@ -5,7 +5,7 @@ namespace App\Domain\Card\Command;
 use App\Infrastructure\Card\CardDTO;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Infrastructure\Common\Command\CommandHandler;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Infrastructure\Card\ValidatorInterface;
 
 class AddCardHandler implements CommandHandler
 {
@@ -28,7 +28,7 @@ class AddCardHandler implements CommandHandler
 			$command->getPower()
 		);
 		$this->validator->validate($cardDTO);
-		$card = $this->repository->save($cardDTO);
+		/*$card = */$this->repository->save($cardDTO);
 
 //		$this->eventBus->handle(new AddCardEvent($cardDTO->getId()));
 	}

@@ -5,10 +5,10 @@ namespace App\Infrastructure\Card;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CardDTO
+class CardDTO implements CardDTOInterface
 {
 	/**
-	 * @Assert\Type("uuid")
+	 * @Assert\Uuid
 	 * @Assert\NotBlank(
 	 *     message="Card id can't be empty"
 	 * )

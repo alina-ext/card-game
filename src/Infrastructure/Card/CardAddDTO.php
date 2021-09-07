@@ -4,7 +4,7 @@ namespace App\Infrastructure\Card;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CardAddDTO
+class CardAddDTO implements CardDTOInterface
 {
 	/**
 	 * @Assert\Type(

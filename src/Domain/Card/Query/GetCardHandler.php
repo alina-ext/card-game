@@ -6,7 +6,7 @@ use App\Domain\Card\Card;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Domain\Card\Response;
 use App\Infrastructure\Common\Query\QueryHandler;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Infrastructure\Card\ValidatorInterface;
 
 class GetCardHandler implements QueryHandler
 {

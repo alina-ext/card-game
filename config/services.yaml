@@ -26,7 +26,7 @@ services:
         class: App\Infrastructure\Common\Query\MessengerQueryBus
 
     api_exception_subscriber:
-        class: App\Infrastructure\Common\Exception\ApiExceptionSubscriber
+        class: App\Infrastructure\ApiExceptionSubscriber
         arguments: [ ]
         tags:
             - { name: kernel.event_subscriber }
@@ -36,8 +36,12 @@ services:
         arguments:
             $name: 'monolog'
 
-    #Controllers\
+    #Controllers
     App\Application\Catalog\CardController: ~
+
+    #Validators
+    App\Infrastructure\Card\ValidatorInterface:
+        class: App\Infrastructure\Card\Validator
 
     #Command Handlers
     App\Domain\Card\Command\AddCardHandler:

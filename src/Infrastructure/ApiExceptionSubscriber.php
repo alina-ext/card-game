@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Infrastructure\Common\Exception;
+namespace App\Infrastructure;
 
 use App\Domain\Card\Exceptions\ConflictException;
 use App\Domain\Card\Exceptions\DBException;
 use App\Domain\Card\Exceptions\NotFoundException;
 use App\Domain\Card\Exceptions\ValidationException;
-use App\Infrastructure\ResponseJson;
 use Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
