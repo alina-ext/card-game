@@ -22,12 +22,13 @@ class AddCardHandler implements CommandHandler
 
 	public function __invoke(AddCardCommand $command): void
 	{
-		$cardDTO = new CardDTO($command->getId(),
+		$cardDTO = new CardDTO(
+			$command->getId(),
 			$command->getTitle(),
 			$command->getPower()
 		);
 		$this->validator->validate($cardDTO);
-		$this->repository->save($cardDTO);
+		$card = $this->repository->save($cardDTO);
 
 //		$this->eventBus->handle(new AddCardEvent($cardDTO->getId()));
 	}

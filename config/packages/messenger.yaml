@@ -5,8 +5,10 @@ framework:
         buses:
             command.bus:
                 middleware:
-                    #- doctrine_transaction
-            query.bus: ~
+                    - doctrine_transaction
+            query.bus:
+                middleware:
+                    - doctrine_transaction
 
         transports:
             sync: 'sync://'
@@ -14,3 +16,4 @@ framework:
 
         routing:
             'App\Domain\Card\Command\AddCardCommand': sync
+            'App\Domain\Card\Query\GetCardQuery': sync

@@ -3,19 +3,19 @@
 namespace App\Application\Catalog;
 
 use App\Domain\Card\Command\AddCardCommand;
-use App\Domain\Card\Exceptions\NewCardException;
 use App\Domain\Card\Exceptions\ValidationException;
+use App\Domain\Card\Query\GetCardQuery;
+use App\Infrastructure\Card\CardGetDTO;
 use App\Infrastructure\Common\Command\CommandBus;
 use App\Infrastructure\Common\Query\QueryBus;
 use App\Infrastructure\ResponseJson;
-use Doctrine\ORM\Id\UuidGenerator;
-use Symfony\Component\Uid\Factory\UuidFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use App\Infrastructure\Card\CardInputDTO;
+use App\Infrastructure\Card\CardAddDTO;
 use Psr\Log\LoggerInterface;
 
 class CardController extends AbstractController
@@ -33,12 +33,11 @@ class CardController extends AbstractController
 		$this->commandBus = $commandBus;
 	}
 
-	public function add(Request $request) {
+	public function add(Request $request): JsonResponse {
 		$title = $request->get('title');
 		$power = $request->get('power');
 		$errors = $this->validator->validate(
-			new CardInputDTO(
-				0,
+			new CardAddDTO(
 				$title,
 				$power
 			)
@@ -50,7 +49,7 @@ class CardController extends AbstractController
 			}
 			$message = implode("\n", $messages);
 			$this->logger->info($message);
-			throw new ValidationException($message, Response::HTTP_BAD_REQUEST);
+			throw new ValidationException($message);
 		}
 
 		$command = new AddCardCommand(Uuid::v4(), $title, $power);
@@ -61,6 +60,32 @@ class CardController extends AbstractController
 			'',
 			null,
 			['Location' => $this->generateUrl('catalog_card_get', ['card_id' => $command->getId()->jsonSerialize()])]
+		);
+	}
+
+	public function getItem(Request $request): JsonResponse
+	{
+		$id = $request->get('card_id');
+		$errors = $this->validator->validate(
+			new CardGetDTO($id)
+		);
+		if (($count = $errors->count())) {
+			$messages = [];
+			for ($i=0; $i<$count; $i++) {
+				$messages[] = $errors->get($i)->getMessage();
+			}
+			$message = implode("\n", $messages);
+			$this->logger->info($message);
+			throw new ValidationException($message);
+		}
+
+		$query = new GetCardQuery($id);
+		$response = $this->queryBus->handle($query);
+
+		return ResponseJson::render(
+			Response::HTTP_CREATED,
+			'',
+			$response,
 		);
 	}
 }

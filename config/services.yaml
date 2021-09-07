@@ -33,12 +33,19 @@ services:
     #Controllers\
     App\Application\Catalog\CardController: ~
 
-    #Handlers
+    #Command Handlers
     App\Domain\Card\Command\AddCardHandler:
         public: true
         class: App\Domain\Card\Command\AddCardHandler
         tags:
             - { name: command_handler, handles: App\Domain\Card\Command\AddCardCommand }
+
+    #Query Handlers
+    App\Domain\Card\Query\GetCardHandler:
+        public: true
+        class: App\Domain\Card\Query\GetCardHandler
+        tags:
+            - { name: command_handler, bus: query.bus, handles: App\Domain\Card\Query\GetCardHandler }
 
     #Repositories
     App\Domain\Card\CardRepositoryInterface:

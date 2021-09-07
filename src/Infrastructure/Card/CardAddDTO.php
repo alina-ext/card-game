@@ -4,13 +4,8 @@ namespace App\Infrastructure\Card;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CardInputDTO
+class CardAddDTO
 {
-	/**
-	 * @Assert\Type("string")
-	 */
-	private ?string $id;
-
 	/**
 	 * @Assert\Type(
 	 *     "string",
@@ -38,9 +33,8 @@ class CardInputDTO
 	 */
 	private string $power;
 
-	public function __construct(?string $id, string $title, string $power)
+	public function __construct(string $title, string $power)
 	{
-		$this->id = $id;
 		$this->title = $title;
 		$this->power = $power;
 	}

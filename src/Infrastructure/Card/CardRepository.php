@@ -10,6 +10,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
+use App\Domain\Card\Exceptions\NotFoundException;
 
 class CardRepository extends ServiceEntityRepository implements CardRepositoryInterface
 {
@@ -18,7 +19,7 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 		parent::__construct($registry, Card::class);
 	}
 
-	public function save(CardDTO $cardDTO): void
+	public function save(CardDTO $cardDTO): Card
 	{
 		$em = $this->getEntityManager();
 
@@ -29,11 +30,19 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 			$em->persist($card);
 			$em->flush();
 		} catch (UniqueConstraintViolationException $e) {
-			throw new ConflictException(
-				sprintf("Card with title %s already exists", $cardDTO->getTitle())
-			);
+			throw new ConflictException(sprintf("Card with title %s already exists", $cardDTO->getTitle()));
 		} catch (Exception $e) {
 			throw new DBException($e->getMessage(), $e->getCode(), $e);
 		}
+
+		return $card;
+	}
+
+	public function getById(string $id): Card {
+		if (($card = $this->find($id)) === null) {
+			throw new NotFoundException(sprintf("No card with id %s exists", $id));
+		}
+
+		return $card;
 	}
 }
