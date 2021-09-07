@@ -11,15 +11,35 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    App\:
-        resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
-            - '../src/Tests/'
+    _instanceof:
+        App\Infrastructure\Common\Command\CommandHandler:
+            tags:
+                - { name: messenger.message_handler, bus: command.bus }
+        App\Infrastructure\Common\Query\QueryHandler:
+            tags:
+                - { name: messenger.message_handler, bus: query.bus }
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Infrastructure\Common\Command\CommandBus:
+        class: App\Infrastructure\Common\Command\MessengerCommandBus
+
+    App\Infrastructure\Common\Query\QueryBus:
+        class: App\Infrastructure\Common\Query\MessengerQueryBus
+
+    Psr\Log\LoggerInterface:
+        class: Monolog\Logger
+        arguments:
+            $name: 'monolog'
+
+    #Controllers\
+    App\Application\Catalog\CardController: ~
+
+    #Handlers
+    App\Domain\Card\Command\AddCardHandler:
+        public: true
+        class: App\Domain\Card\Command\AddCardHandler
+        tags:
+            - { name: command_handler, handles: App\Domain\Card\Command\AddCardCommand }
+
+    #Repositories
+    App\Domain\Card\CardRepositoryInterface:
+        class: App\Infrastructure\Card\CardRepository

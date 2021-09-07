@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS decks_cards (
     deck_id char(36) NOT NULL,
     card_id char(36) NOT NULL,
     title varchar(255) NOT NULL,
-    power smallint UNSIGNED NOT NULL
+    power smallint UNSIGNED NOT NULL,
     amount smallint UNSIGNED NOT NULL DEFAULT 1,
     UNIQUE KEY(deck_id, card_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

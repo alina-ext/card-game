@@ -2,19 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\CardsRepository;
+use App\Infrastructure\Card\CardRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=CardsRepository::class)
+ * @ORM\Entity(repositoryClass=CardRepository::class)
+ * @ORM\Table(name="cards")
  */
-class Cards
+class Card
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+	/**
+	 * @ORM\Id
+	 * @ORM\Column(type="string", length=36, unique=true)
+	 */
     private $id;
 
     /**
@@ -23,14 +23,21 @@ class Cards
     private $title;
 
     /**
-     * @ORM\Column(type="smallint", unsigned=true)
+     * @ORM\Column(type="smallint", columnDefinition="unsigned")
      */
     private $power;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+	public function getId(): string
+	{
+		return $this->id;
+	}
+
+	public function setId(string $id): self
+	{
+		$this->id = $id;
+
+		return $this;
+	}
 
     public function getTitle(): ?string
     {
