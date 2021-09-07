@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ResponseJson
 {
-	public static function render(int $code, ?string $message, Payload $payload = null, ?array $header = []): JsonResponse
+	public static function render(int $code, ?string $message = null, Payload $payload = null, ?array $header = []): JsonResponse
 	{
 		$info = [];
 		if ($message) {
