@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure;
 
+use App\Domain\Card\Exceptions\BadCommand;
 use App\Domain\Card\Exceptions\ConflictException;
 use App\Domain\Card\Exceptions\DBException;
 use App\Domain\Card\Exceptions\NotFoundException;
@@ -34,7 +35,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
 
 			return;
 		}
-		if ($e instanceof DBException || $e instanceof GeneratorException || $e instanceof Exception) {
+		if ($e instanceof DBException || $e instanceof BadCommand || $e instanceof GeneratorException || $e instanceof Exception) {
 			$event->setResponse(ResponseJson::render(Response::HTTP_BAD_GATEWAY, $e->getMessage()));
 
 			return;

@@ -6,14 +6,13 @@ namespace App\Infrastructure\Card;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Domain\Card\Exceptions\ConflictException;
 use App\Domain\Card\Exceptions\DBException;
-use App\Domain\Card\Validator\CardAddDTO;
 use App\Entity\Card;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use App\Domain\Card\Exceptions\NotFoundException;
-use App\Domain\Card\Card AS CardModel;
+use App\Domain\Card\Card as CardModel;
 
 class CardRepository extends ServiceEntityRepository implements CardRepositoryInterface
 {
@@ -22,65 +21,44 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 		parent::__construct($registry, Card::class);
 	}
 
-	public function update(CardAddDTO $cardDTO): Card
+	public function save(CardModel $card): Card
 	{
 		$em = $this->getEntityManager();
+		$entity = $card->getEntity();
 
-		$card = new Card();
-		$card->setId($cardDTO->getId()->jsonSerialize())->setTitle($cardDTO->getTitle())->setPower($cardDTO->getPower());
-
+		if ($card->isDeleted()) {
+			$em->remove($entity);
+			return $entity;
+		}
+		$bAdd = false;
+		if (!$entity) {
+			$bAdd = true;
+			$entity = new Card();
+		}
+		$entity
+			->setId($card->getId())
+			->setTitle($card->getTitle())
+			->setPower($card->getPower());
 		try {
+			if ($bAdd) {
+				$em->persist($entity);
+			}
 			$em->flush();
 		} catch (UniqueConstraintViolationException $e) {
-			throw new ConflictException(sprintf("Card with title %s already exists", $cardDTO->getTitle()));
+			throw new ConflictException(sprintf("Card with title %s already exists", $card->getTitle()));
 		} catch (Exception $e) {
 			throw new DBException($e->getMessage(), $e->getCode(), $e);
 		}
 
-		return $card;
+		return $entity;
 	}
 
-	public function save(CardAddDTO $cardDTO): Card
+	public function getById(string $id): Card
 	{
-		$em = $this->getEntityManager();
-
-		$card = new Card();
-		$card->setId($cardDTO->getId()->jsonSerialize())->setTitle($cardDTO->getTitle())->setPower($cardDTO->getPower());
-
-		try {
-			$em->persist($card);
-			$em->flush();
-		} catch (UniqueConstraintViolationException $e) {
-			throw new ConflictException(sprintf("Card with title %s already exists", $cardDTO->getTitle()));
-		} catch (Exception $e) {
-			throw new DBException($e->getMessage(), $e->getCode(), $e);
-		}
-
-		return $card;
-	}
-
-	public function delete(CardModel $cardModel): CardModel
-	{
-		$em = $this->getEntityManager();
-
-		$card = new Card();
-		$card->setId($cardModel->getId())->setTitle($cardModel->getTitle())->setPower($cardModel->getPower());
-
-		try {
-			$em->remove($card);
-			$em->flush();
-		} catch (Exception $e) {
-			throw new DBException($e->getMessage(), $e->getCode(), $e);
-		}
-
-		return $cardModel;
-	}
-
-	public function getById(string $id): object {
-		if (($card = $this->find($id)) === null) {
+		if (($entity = $this->find($id)) === null) {
 			throw new NotFoundException(sprintf("No card with id %s exists", $id));
 		}
 
-		return $card;
+		return $entity;
 	}
 }

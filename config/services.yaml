@@ -36,8 +36,23 @@ services:
         arguments:
             $name: 'monolog'
 
+    App\Infrastructure\Common\Event\Publisher: ~
+    App\Infrastructure\Common\Event\Subscriber: ~
+
     #Controllers
     App\Application\Catalog\CardController: ~
+
+    #Repositories
+    App\Infrastructure\Common\Event\EventRepository:
+        class: App\Infrastructure\Common\Event\EventRepository
+    App\Infrastructure\Card\CardRepository:
+        class: App\Infrastructure\Card\CardRepository
+    App\Infrastructure\Card\WrapperRepository:
+        class: App\Infrastructure\Card\WrapperRepository
+        arguments:
+            $cardRepository: '@App\Infrastructure\Card\CardRepository'
+            $eventRepository: '@App\Infrastructure\Common\Event\EventRepository'
+            $publisher: '@App\Infrastructure\Common\Event\Publisher'
 
     #Validators
     App\Infrastructure\Card\ValidatorInterface:
@@ -51,16 +66,22 @@ services:
     App\Domain\Card\Command\AddCardHandler:
         public: true
         class: App\Domain\Card\Command\AddCardHandler
+        arguments:
+            $repository: '@App\Infrastructure\Card\WrapperRepository'
         tags:
             - { name: command_handler, handles: App\Domain\Card\Command\AddCardCommand }
     App\Domain\Card\Command\DeleteCardHandler:
         public: true
         class: App\Domain\Card\Command\DeleteCardHandler
+        arguments:
+            $repository: '@App\Infrastructure\Card\WrapperRepository'
         tags:
             - { name: command_handler, handles: App\Domain\Card\Command\DeleteCardCommand }
     App\Domain\Card\Command\UpdateCardHandler:
         public: true
         class: App\Domain\Card\Command\UpdateCardHandler
+        arguments:
+            $repository: '@App\Infrastructure\Card\WrapperRepository'
         tags:
             - { name: command_handler, handles: App\Domain\Card\Command\UpdateCardCommand }
 
@@ -68,9 +89,8 @@ services:
     App\Domain\Card\Query\GetCardHandler:
         public: true
         class: App\Domain\Card\Query\GetCardHandler
+        arguments:
+            $repository: '@App\Infrastructure\Card\WrapperRepository'
         tags:
             - { name: command_handler, bus: query.bus, handles: App\Domain\Card\Query\GetCardHandler }
 
-    #Repositories
-    App\Domain\Card\CardRepositoryInterface:
-        class: App\Infrastructure\Card\CardRepository

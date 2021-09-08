@@ -34,8 +34,14 @@ class GetCardHandler implements QueryHandler
 		);
 		$this->validator->validate($cardDTO);
 
-		$modelDB = $this->repository->getById($this->uuidGenerator->toString($query->getId()));
-		$model = new Card($modelDB->getId(), $modelDB->getTitle(), $modelDB->getPower());
+		$modelDB = $this->repository->getById(
+			$this->uuidGenerator->toString($query->getId())
+		);
+		$model = new Card(
+			$modelDB->getId(),
+			$modelDB->getTitle(),
+			$modelDB->getPower()
+		);
 		$response = new Response();
 		$model->fillResponse($response);
 

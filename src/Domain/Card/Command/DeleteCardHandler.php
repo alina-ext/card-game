@@ -13,8 +13,8 @@ use App\Infrastructure\Common\Generator\GeneratorInterface;
 class DeleteCardHandler implements CommandHandler
 {
 	private CardRepositoryInterface $repository;
-	private GeneratorInterface $uuidGenerator;
 	private ValidatorInterface $validator;
+	private GeneratorInterface $uuidGenerator;
 
 	public function __construct(
 		ValidatorInterface $validator,
@@ -25,6 +25,7 @@ class DeleteCardHandler implements CommandHandler
 		$this->repository = $repository;
 		$this->uuidGenerator = $uuidGenerator;
 	}
+
 	public function __invoke(DeleteCardCommand $command): void
 	{
 		$cardDTO = new CardGetDTO(
@@ -32,13 +33,16 @@ class DeleteCardHandler implements CommandHandler
 		);
 		$this->validator->validate($cardDTO);
 
-		$modelDB = $this->repository->getById($this->uuidGenerator->toString($command->getId()));
-		$cart = new Card(
-			$modelDB->getId(),
-			$modelDB->getTitle(),
-			$modelDB->getPower(),
+		$entity = $this->repository->getById(
+			$this->uuidGenerator->toString($command->getId())
+		);
+		$model = new Card(
+			$entity->getId(),
+			$entity->getTitle(),
+			$entity->getPower(),
 			true
 		);
-		$this->repository->delete($cart);
+		$model->setEntity($entity);
+		$this->repository->save($model);
 	}
 }

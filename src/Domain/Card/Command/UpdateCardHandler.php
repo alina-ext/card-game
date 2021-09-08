@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Command;
 
-use App\Domain\Card\Validator\CardAddDTO;
+use App\Domain\Card\Card;
 use App\Domain\Card\Validator\CardUpdateDTO;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Infrastructure\Common\Command\CommandHandler;
@@ -35,19 +35,26 @@ class UpdateCardHandler implements CommandHandler
 		);
 		$this->validator->validate($cardDTO);
 
-		$modelDB = $this->repository->getById($this->uuidGenerator->toString($command->getId()));
-		if (($title = $cardDTO->getTitle())) {
-			$modelDB->setTitle($title);
+		$entity = $this->repository->getById(
+			$this->uuidGenerator->toString($command->getId())
+		);
+		$model = new Card(
+			$entity->getId(),
+			$entity->getTitle(),
+			$entity->getPower()
+		);
+		$model->setEntity($entity);
+		$title = $cardDTO->getTitle();
+		if (null !== $title) {
+			$model->setTitle($title);
+			$model->pushEvent('card:update:title');
 		}
 		$power = $cardDTO->getPower();
 		if (null !== $power) {
-			$modelDB->setPower(intval($power));
+			$model->setPower(intval($power));
+			$model->pushEvent('card:update:power');
 		}
-		$cardDTO = new CardAddDTO(
-			$command->getId(),
-			$modelDB->getTitle(),
-			$modelDB->getPower()
-		);
-		$this->repository->update($cardDTO);
+
+		$this->repository->save($model);
 	}
 }

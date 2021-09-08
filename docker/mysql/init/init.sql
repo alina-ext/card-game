@@ -24,3 +24,11 @@ CREATE TABLE IF NOT EXISTS decks_cards (
     amount smallint UNSIGNED NOT NULL DEFAULT 1,
     UNIQUE KEY(deck_id, card_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE events (
+    id    INT AUTO_INCREMENT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    data  LONGTEXT     NOT NULL,
+    tm    DATETIME     NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
