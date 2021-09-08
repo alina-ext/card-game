@@ -7,8 +7,8 @@ use App\Domain\Card\Command\AddCardCommand;
 use App\Domain\Card\Command\DeleteCardCommand;
 use App\Domain\Card\Command\UpdateCardCommand;
 use App\Domain\Card\Query\GetCardQuery;
-use App\Infrastructure\Card\CardGetInputDTO;
-use App\Infrastructure\Card\CardUpdateInputDTO;
+use App\Infrastructure\Card\Validator\CardGetDTO;
+use App\Infrastructure\Card\Validator\CardUpdateDTO;
 use App\Infrastructure\Card\ValidatorInterface;
 use App\Infrastructure\Common\Command\CommandBus;
 use App\Infrastructure\Common\Query\QueryBus;
@@ -17,36 +17,34 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Infrastructure\Card\CardAddInputDTO;
+use App\Infrastructure\Card\Validator\CardAddDTO;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
-//use Psr\Log\LoggerInterface;
 
 class CardController extends AbstractController
 {
-//	private LoggerInterface $logger;
 	private GeneratorInterface $uuidGenerator;
 	private ValidatorInterface $validator;
 	private QueryBus $queryBus;
 	private CommandBus $commandBus;
 
-	public function __construct(/*LoggerInterface $logger, */
+	public function __construct(
 		GeneratorInterface $uuidGenerator,
 		ValidatorInterface $validator,
 		QueryBus $queryBus,
 		CommandBus $commandBus
 	)
 	{
-//		$this->logger = $logger;
 		$this->uuidGenerator = $uuidGenerator;
 		$this->validator = $validator;
 		$this->queryBus = $queryBus;
 		$this->commandBus = $commandBus;
 	}
 
-	public function add(Request $request): JsonResponse {
+	public function add(Request $request): JsonResponse
+	{
 		$title = $request->get('title');
 		$power = $request->get('power');
-		$this->validator->validate(new CardAddInputDTO(
+		$this->validator->validate(new CardAddDTO(
 			$title,
 			$power
 		));
@@ -65,7 +63,7 @@ class CardController extends AbstractController
 	public function getItem(Request $request): JsonResponse
 	{
 		$id = $this->uuidGenerator->fromString($request->get('card_id'));
-		$this->validator->validate(new CardGetInputDTO($id));
+		$this->validator->validate(new CardGetDTO($id));
 
 		$query = new GetCardQuery($id);
 		$response = $this->queryBus->handle($query);
@@ -77,11 +75,12 @@ class CardController extends AbstractController
 		);
 	}
 
-	public function update(Request $request): JsonResponse {
+	public function update(Request $request): JsonResponse
+	{
 		$id = $this->uuidGenerator->fromString($request->get('card_id'));
 		$title = $request->get('title');
 		$power = $request->get('power');
-		$this->validator->validate(new CardUpdateInputDTO(
+		$this->validator->validate(new CardUpdateDTO(
 			$id,
 			$title,
 			$power
@@ -97,9 +96,10 @@ class CardController extends AbstractController
 		);
 	}
 
-	public function delete(Request $request): JsonResponse {
+	public function delete(Request $request): JsonResponse
+	{
 		$id = $this->uuidGenerator->fromString($request->get('card_id'));
-		$this->validator->validate(new CardGetInputDTO($id));
+		$this->validator->validate(new CardGetDTO($id));
 
 		$command = new DeleteCardCommand($id);
 		$this->commandBus->dispatch($command);

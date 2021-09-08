@@ -6,7 +6,7 @@ namespace App\Domain\Card\Query;
 use App\Domain\Card\Card;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Domain\Card\Response;
-use App\Infrastructure\Card\CardGetDTO;
+use App\Domain\Card\Validator\CardGetDTO;
 use App\Infrastructure\Card\ValidatorInterface;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 use App\Infrastructure\Common\Query\QueryHandler;

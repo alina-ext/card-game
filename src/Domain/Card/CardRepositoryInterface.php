@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Domain\Card;
 
 use App\Domain\Card\Card AS CardModel;
+use App\Domain\Card\Validator\CardAddDTO;
 use App\Entity\Card;
-use App\Infrastructure\Card\CardAddDTO;
 
 interface CardRepositoryInterface
 {

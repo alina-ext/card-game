@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Card;
+namespace App\Domain\Card\Validator;
 
-use App\Domain\Card\Exceptions\ValidationException;
+use App\Infrastructure\Card\CardDTOInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CardUpdateDTO implements CardDTOInterface
+class CardAddDTO implements CardDTOInterface
 {
 	/**
 	 * @Assert\Uuid
@@ -16,8 +16,11 @@ class CardUpdateDTO implements CardDTOInterface
 	 * )
 	 */
 	private Uuid $id;
-
 	/**
+	 * @Assert\Type(
+	 *     "string",
+	 *     message="Cart title {{ value }} is not a valid {{ type }}"
+	 * )
 	 * @Assert\Length(
 	 *     min=2,
 	 *     max=255,
@@ -25,26 +28,26 @@ class CardUpdateDTO implements CardDTOInterface
 	 *     maxMessage="Card title maximum length is {{ limit }} characters"
 	 * )
 	 */
-	private ?string $title;
+	private string $title;
 
 	/**
+	 * @Assert\NotBlank(
+	 *     message="Card power can't be empty"
+	 * )
 	 * @Assert\Type(
-	 *	 "digit",
+	 *	 "int",
 	 *	 message="Card power {{ value }} is not a valid {{ type }}"
 	 * )
 	 * @Assert\PositiveOrZero()
 	 * @Assert\LessThan(65535)
 	 */
-	private ?string $power;
+	private int $power;
 
-	public function __construct(Uuid $id, ?string $title, ?string $power)
+	public function __construct(Uuid $id, string $title, string|int $power)
 	{
-		if (null === $title && null === $power) {
-			throw new ValidationException('Required title or power value');
-		}
 		$this->id = $id;
 		$this->title = $title;
-		$this->power = $power;
+		$this->power = intval($power);
 	}
 
 	public function getId(): Uuid
@@ -52,14 +55,13 @@ class CardUpdateDTO implements CardDTOInterface
 		return $this->id;
 	}
 
-	public function getTitle(): ?string
+	public function getTitle(): string
 	{
 		return $this->title;
 	}
 
-	public function getPower(): ?string
+	public function getPower(): int
 	{
 		return $this->power;
 	}
-
 }

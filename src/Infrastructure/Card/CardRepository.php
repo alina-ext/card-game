@@ -6,6 +6,7 @@ namespace App\Infrastructure\Card;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Domain\Card\Exceptions\ConflictException;
 use App\Domain\Card\Exceptions\DBException;
+use App\Domain\Card\Validator\CardAddDTO;
 use App\Entity\Card;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;

@@ -1,17 +1,24 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Card;
+namespace App\Infrastructure\Card\Validator;
 
+use App\Domain\Card\Exceptions\ValidationException;
+use App\Infrastructure\Card\CardDTOInterface;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CardAddInputDTO implements CardDTOInterface
+class CardUpdateDTO implements CardDTOInterface
 {
 	/**
-	 * @Assert\Type(
-	 *     "string",
-	 *     message="Cart title {{ value }} is not a valid {{ type }}"
+	 * @Assert\Uuid
+	 * @Assert\NotBlank(
+	 *     message="Card id can't be empty"
 	 * )
+	 */
+	private Uuid $id;
+
+	/**
 	 * @Assert\Length(
 	 *     min=2,
 	 *     max=255,
@@ -22,9 +29,6 @@ class CardAddInputDTO implements CardDTOInterface
 	private ?string $title;
 
 	/**
-	 * @Assert\NotBlank(
-	 *     message="Card power can't be empty"
-	 * )
 	 * @Assert\Type(
 	 *	 "digit",
 	 *	 message="Card power {{ value }} is not a valid {{ type }}"
@@ -34,8 +38,12 @@ class CardAddInputDTO implements CardDTOInterface
 	 */
 	private ?string $power;
 
-	public function __construct(?string $title, ?string $power)
+	public function __construct(Uuid $id, ?string $title, ?string $power)
 	{
+		if (null === $title && null === $power) {
+			throw new ValidationException('Required title or power value');
+		}
+		$this->id = $id;
 		$this->title = $title;
 		$this->power = $power;
 	}

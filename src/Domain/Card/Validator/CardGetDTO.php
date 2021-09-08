@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Card;
+namespace App\Domain\Card\Validator;
 
+use App\Infrastructure\Card\CardDTOInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 

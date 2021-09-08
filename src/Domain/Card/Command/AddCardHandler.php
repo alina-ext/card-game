@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Command;
 
-use App\Infrastructure\Card\CardAddDTO;
 use App\Domain\Card\CardRepositoryInterface;
+use App\Domain\Card\Validator\CardAddDTO;
 use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\Card\ValidatorInterface;
 
@@ -15,12 +15,11 @@ class AddCardHandler implements CommandHandler
 
 	public function __construct(
 		ValidatorInterface $validator,
-		CardRepositoryInterface $repository,
+		CardRepositoryInterface $repository
 	) {
 		$this->validator = $validator;
 		$this->repository = $repository;
 	}
-
 	public function __invoke(AddCardCommand $command): void
 	{
 		$cardDTO = new CardAddDTO(
@@ -29,8 +28,6 @@ class AddCardHandler implements CommandHandler
 			$command->getPower()
 		);
 		$this->validator->validate($cardDTO);
-		/*$card = */$this->repository->save($cardDTO);
-
-//		$this->eventBus->handle(new AddCardEvent($cardDTO->getId()));
+		$this->repository->save($cardDTO);
 	}
 }

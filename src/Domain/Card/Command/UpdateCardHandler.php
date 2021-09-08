@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Command;
 
-use App\Infrastructure\Card\CardAddDTO;
+use App\Domain\Card\Validator\CardAddDTO;
+use App\Domain\Card\Validator\CardUpdateDTO;
 use App\Domain\Card\CardRepositoryInterface;
-use App\Infrastructure\Card\CardUpdateDTO;
 use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\Card\ValidatorInterface;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
@@ -48,6 +48,6 @@ class UpdateCardHandler implements CommandHandler
 			$modelDB->getTitle(),
 			$modelDB->getPower()
 		);
-		/*$card = */$this->repository->update($cardDTO);
+		$this->repository->update($cardDTO);
 	}
 }
