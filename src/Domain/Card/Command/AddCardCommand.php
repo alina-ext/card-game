@@ -12,9 +12,9 @@ class AddCardCommand implements Command
 	private string $title;
 	private string $power;
 
-	public function __construct(string $title, string $power)
+	public function __construct(Uuid $id, string $title, string $power)
 	{
-		$this->id = Uuid::v4();
+		$this->id = $id;
 		$this->title = $title;
 		$this->power = $power;
 	}

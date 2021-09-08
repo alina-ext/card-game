@@ -6,7 +6,7 @@ namespace App\Infrastructure\Card;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CardDTO implements CardDTOInterface
+class CardAddDTO implements CardDTOInterface
 {
 	/**
 	 * @Assert\Uuid
@@ -23,8 +23,8 @@ class CardDTO implements CardDTOInterface
 	 * @Assert\Length(
 	 *     min=2,
 	 *     max=255,
-	 *     minMessage="Card title minimum length is 2 characters",
-	 *     maxMessage="Card title maximum length is 255 characters"
+	 *     minMessage="Card title minimum length is {{ limit }} characters",
+	 *     maxMessage="Card title maximum length is {{ limit }} characters"
 	 * )
 	 */
 	private string $title;

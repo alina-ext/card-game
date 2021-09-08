@@ -43,6 +43,10 @@ services:
     App\Infrastructure\Card\ValidatorInterface:
         class: App\Infrastructure\Card\Validator
 
+    #Generators
+    App\Infrastructure\Common\Generator\GeneratorInterface:
+        class: App\Infrastructure\Common\Generator\UuidGenerator
+
     #Command Handlers
     App\Domain\Card\Command\AddCardHandler:
         public: true

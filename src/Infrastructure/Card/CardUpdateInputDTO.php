@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Infrastructure\Card;
 
 use App\Domain\Card\Exceptions\ValidationException;
-use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -38,16 +37,12 @@ class CardUpdateInputDTO implements CardDTOInterface
 	 */
 	private ?string $power;
 
-	public function __construct(string $id, ?string $title, ?string $power)
+	public function __construct(Uuid $id, ?string $title, ?string $power)
 	{
 		if (null === $title && null === $power) {
 			throw new ValidationException('Required title or power value');
 		}
-		try {
-			$this->id = Uuid::fromString($id);
-		} catch (InvalidArgumentException $e) {
-			throw new ValidationException($e->getMessage());
-		}
+		$this->id = $id;
 		$this->title = $title;
 		$this->power = $power;
 	}

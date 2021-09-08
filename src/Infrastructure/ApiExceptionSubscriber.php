@@ -7,6 +7,7 @@ use App\Domain\Card\Exceptions\ConflictException;
 use App\Domain\Card\Exceptions\DBException;
 use App\Domain\Card\Exceptions\NotFoundException;
 use App\Domain\Card\Exceptions\ValidationException;
+use App\Infrastructure\Common\Generator\GeneratorException;
 use Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,13 +34,8 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
 
 			return;
 		}
-		if ($e instanceof DBException) {
+		if ($e instanceof DBException || $e instanceof GeneratorException || $e instanceof Exception) {
 			$event->setResponse(ResponseJson::render(Response::HTTP_BAD_GATEWAY, $e->getMessage()));
-
-			return;
-		}
-		if ($e instanceof Exception) {
-			$event->setResponse(ResponseJson::render(Response::HTTP_BAD_REQUEST, $e->getMessage()));
 
 			return;
 		}

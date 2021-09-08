@@ -5,11 +5,11 @@ namespace App\Domain\Card;
 
 use App\Domain\Card\Card AS CardModel;
 use App\Entity\Card;
-use App\Infrastructure\Card\CardDTO;
+use App\Infrastructure\Card\CardAddDTO;
 
 interface CardRepositoryInterface
 {
-	public function save(CardDTO $cardDTO): Card;
+	public function save(CardAddDTO $cardDTO): Card;
 
 	public function getById(string $id): object;
 

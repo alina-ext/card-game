@@ -3,37 +3,39 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Command;
 
-use App\Infrastructure\Card\CardDTO;
+use App\Infrastructure\Card\CardAddDTO;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Infrastructure\Card\CardUpdateDTO;
 use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\Card\ValidatorInterface;
-use Symfony\Component\Uid\Uuid;
+use App\Infrastructure\Common\Generator\GeneratorInterface;
 
 class UpdateCardHandler implements CommandHandler
 {
 	private CardRepositoryInterface $repository;
 	private ValidatorInterface $validator;
+	private GeneratorInterface $uuidGenerator;
 
 	public function __construct(
 		ValidatorInterface $validator,
 		CardRepositoryInterface $repository,
+		GeneratorInterface $uuidGenerator
 	) {
 		$this->validator = $validator;
 		$this->repository = $repository;
+		$this->uuidGenerator = $uuidGenerator;
 	}
 
 	public function __invoke(UpdateCardCommand $command): void
 	{
-		$id = Uuid::fromString($command->getId());
 		$cardDTO = new CardUpdateDTO(
-			$id,
+			$command->getId(),
 			$command->getTitle(),
 			$command->getPower()
 		);
 		$this->validator->validate($cardDTO);
 
-		$modelDB = $this->repository->getById($command->getId());
+		$modelDB = $this->repository->getById($this->uuidGenerator->toString($command->getId()));
 		if (($title = $cardDTO->getTitle())) {
 			$modelDB->setTitle($title);
 		}
@@ -41,8 +43,8 @@ class UpdateCardHandler implements CommandHandler
 		if (null !== $power) {
 			$modelDB->setPower(intval($power));
 		}
-		$cardDTO = new CardDTO(
-			$id,
+		$cardDTO = new CardAddDTO(
+			$command->getId(),
 			$modelDB->getTitle(),
 			$modelDB->getPower()
 		);

@@ -6,7 +6,7 @@ namespace App\Infrastructure\Card;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CardGetInputDTO implements CardDTOInterface
+class CardGetDTO implements CardDTOInterface
 {
 	/**
 	 * @Assert\Uuid
@@ -19,10 +19,5 @@ class CardGetInputDTO implements CardDTOInterface
 	public function __construct(Uuid $id)
 	{
 		$this->id = $id;
-	}
-
-	public function getId(): Uuid
-	{
-		return $this->id;
 	}
 }

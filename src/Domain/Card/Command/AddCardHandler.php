@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Command;
 
-use App\Infrastructure\Card\CardDTO;
+use App\Infrastructure\Card\CardAddDTO;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\Card\ValidatorInterface;
@@ -23,7 +23,7 @@ class AddCardHandler implements CommandHandler
 
 	public function __invoke(AddCardCommand $command): void
 	{
-		$cardDTO = new CardDTO(
+		$cardDTO = new CardAddDTO(
 			$command->getId(),
 			$command->getTitle(),
 			$command->getPower()

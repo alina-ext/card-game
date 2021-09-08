@@ -21,7 +21,7 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 		parent::__construct($registry, Card::class);
 	}
 
-	public function update(CardDTO $cardDTO): Card
+	public function update(CardAddDTO $cardDTO): Card
 	{
 		$em = $this->getEntityManager();
 
@@ -39,7 +39,7 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 		return $card;
 	}
 
-	public function save(CardDTO $cardDTO): Card
+	public function save(CardAddDTO $cardDTO): Card
 	{
 		$em = $this->getEntityManager();
 
