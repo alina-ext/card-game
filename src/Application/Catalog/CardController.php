@@ -6,6 +6,7 @@ namespace App\Application\Catalog;
 use App\Domain\Card\Command\AddCardCommand;
 use App\Domain\Card\Command\DeleteCardCommand;
 use App\Domain\Card\Command\UpdateCardCommand;
+use App\Domain\Card\Query\GetCardListQuery;
 use App\Domain\Card\Query\GetCardQuery;
 use App\Infrastructure\Card\Validator\CardGetDTO;
 use App\Infrastructure\Card\Validator\CardUpdateDTO;
@@ -108,6 +109,23 @@ class CardController extends AbstractController
 			Response::HTTP_OK,
 			'',
 			null
+		);
+	}
+
+	public function list(Request $request): JsonResponse
+	{
+		$page = $request->get('page_id', 1);
+		if (!is_numeric($page) || $page != intval($page) || $page <= 0) {
+			return ResponseJson::render(Response::HTTP_BAD_REQUEST, 'Invalid page');
+		}
+
+		$query = new GetCardListQuery(intval($page));
+		$response = $this->queryBus->handle($query);
+
+		return ResponseJson::render(
+			Response::HTTP_OK,
+			'',
+			$response,
 		);
 	}
 }

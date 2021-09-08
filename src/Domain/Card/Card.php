@@ -5,7 +5,7 @@ namespace App\Domain\Card;
 
 use App\Entity\Event;
 use DateTime;
-use App\Entity\Card AS CardEntity;
+use App\Entity\Card as CardEntity;
 
 class Card
 {
@@ -26,7 +26,8 @@ class Card
 		$this->events = [];
 	}
 
-	public function pushEvent(string $eventTitle) {
+	public function pushEvent(string $eventTitle)
+	{
 		$event = new Event();
 		$event->setTitle($eventTitle);
 		$event->setData(json_encode($this->getCard()));
@@ -34,11 +35,13 @@ class Card
 		$this->events[] = $event;
 	}
 
-	public function getEvents(): array {
+	public function getEvents(): array
+	{
 		return $this->events;
 	}
 
-	public function deleteEvents(): void {
+	public function deleteEvents(): void
+	{
 		$this->events = [];
 	}
 
@@ -82,7 +85,8 @@ class Card
 		return $this->deleted;
 	}
 
-	private function getCard() {
+	public function getCard()
+	{
 		return [
 			'id' => $this->id,
 			'title' => $this->title,

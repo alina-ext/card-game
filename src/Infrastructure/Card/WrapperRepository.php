@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Card;
 
 use App\Domain\Card\Card as CardModel;
+use App\Domain\Card\CardCollection;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Entity\Card;
 use App\Infrastructure\Common\Event\EventRepositoryInterface;
@@ -44,5 +45,10 @@ class WrapperRepository implements CardRepositoryInterface
 	public function getById(string $id): Card
 	{
 		return $this->cardRepository->getById($id);
+	}
+
+	public function getList(FilterService $filter): CardCollection
+	{
+		return $this->cardRepository->getList($filter);
 	}
 }

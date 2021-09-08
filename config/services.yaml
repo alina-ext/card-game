@@ -38,6 +38,7 @@ services:
 
     App\Infrastructure\Common\Event\Publisher: ~
     App\Infrastructure\Common\Event\Subscriber: ~
+    App\Domain\Card\PaginationService: ~
 
     #Controllers
     App\Application\Catalog\CardController: ~
@@ -92,5 +93,13 @@ services:
         arguments:
             $repository: '@App\Infrastructure\Card\WrapperRepository'
         tags:
-            - { name: command_handler, bus: query.bus, handles: App\Domain\Card\Query\GetCardHandler }
+            - { name: command_handler, bus: query.bus, handles: App\Domain\Card\Query\GetCardQuery }
+    App\Domain\Card\Query\GetCardListHandler:
+        public: true
+        class: App\Domain\Card\Query\GetCardListHandler
+        arguments:
+            $repository: '@App\Infrastructure\Card\WrapperRepository'
+            $paginationService: '@App\Domain\Card\PaginationService'
+        tags:
+            - { name: command_handler, bus: query.bus, handles: App\Domain\Card\Query\GetCardListQuery }
 

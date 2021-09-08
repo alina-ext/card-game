@@ -8,7 +8,7 @@ catalog_card_get:
   controller: App\Application\Catalog\CardController::getItem
   methods: GET
   requirements:
-    product_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+    card_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 catalog_card_list:
   path: /cards/{page_id}
@@ -24,7 +24,7 @@ catalog_card_update:
   controller: App\Application\Catalog\CardController::update
   methods: PATCH
   requirements:
-    product_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+    card_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 catalog_card_delete:
   path: /cards/{card_id}
@@ -65,4 +65,4 @@ deck_card_delete:
   methods: DELETE
   requirements:
     deck_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
-    product_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+    card_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'

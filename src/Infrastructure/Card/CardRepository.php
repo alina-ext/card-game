@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Card;
 
+use App\Domain\Card\CardCollection;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Domain\Card\Exceptions\ConflictException;
 use App\Domain\Card\Exceptions\DBException;
@@ -60,5 +61,24 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 		}
 
 		return $entity;
+	}
+
+	public function getList(FilterService $filter): CardCollection
+	{
+		$em = $this->getEntityManager();
+		$query = $em->createQuery("SELECT card FROM App\Entity\Card card");
+
+		$query
+			->setMaxResults($filter->getLimit())
+			->setFirstResult($filter->getOffset());
+
+		$data = $query->getResult();
+		if (!$data) {
+			throw new NotFoundException('Page not found');
+		}
+
+		$query = $em->createQuery("SELECT COUNT(card) FROM App\Entity\Card card");
+
+		return new CardCollection($data, intval($query->getSingleScalarResult()));
 	}
 }
