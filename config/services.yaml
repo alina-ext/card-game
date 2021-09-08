@@ -42,6 +42,7 @@ services:
 
     #Controllers
     App\Application\Catalog\CardController: ~
+    App\Application\Deck\DeckController: ~
 
     #Repositories
     App\Infrastructure\Common\Event\EventRepository:
@@ -54,10 +55,20 @@ services:
             $cardRepository: '@App\Infrastructure\Card\CardRepository'
             $eventRepository: '@App\Infrastructure\Common\Event\EventRepository'
             $publisher: '@App\Infrastructure\Common\Event\Publisher'
+    App\Infrastructure\Deck\DeckRepository:
+        class: App\Infrastructure\Deck\DeckRepository
+    App\Infrastructure\Deck\WrapperRepository:
+        class: App\Infrastructure\Deck\WrapperRepository
+        arguments:
+            $deckRepository: '@App\Infrastructure\Deck\DeckRepository'
+            $eventRepository: '@App\Infrastructure\Common\Event\EventRepository'
+            $publisher: '@App\Infrastructure\Common\Event\Publisher'
 
     #Validators
     App\Infrastructure\Card\ValidatorInterface:
         class: App\Infrastructure\Card\Validator
+    App\Infrastructure\Deck\ValidatorInterface:
+        class: App\Infrastructure\Deck\Validator
 
     #Generators
     App\Infrastructure\Common\Generator\GeneratorInterface:
@@ -85,6 +96,14 @@ services:
             $repository: '@App\Infrastructure\Card\WrapperRepository'
         tags:
             - { name: command_handler, handles: App\Domain\Card\Command\UpdateCardCommand }
+
+    App\Domain\Deck\Command\AddDeckHandler:
+        public: true
+        class: App\Domain\Deck\Command\AddDeckHandler
+        arguments:
+            $repository: '@App\Infrastructure\Deck\WrapperRepository'
+        tags:
+            - { name: command_handler, handles: App\Domain\Deck\Command\AddDeckCommand }
 
     #Query Handlers
     App\Domain\Card\Query\GetCardHandler:

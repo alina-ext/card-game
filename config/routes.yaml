@@ -35,33 +35,33 @@ catalog_card_delete:
 
 deck_add:
   path: /decks
-  controller: App\Application\Deck\DeskController::add
+  controller: App\Application\Deck\DeckController::add
   methods: POST
 
 deck_get:
   path: /decks/{deck_id}
-  controller: App\Application\Deck\DeskController::getItems
+  controller: App\Application\Deck\DeckController::getItems
   methods: GET
   requirements:
     deck_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 deck_delete:
   path: /decks/{deck_id}
-  controller: App\Application\Deck\DeskController::delete
+  controller: App\Application\Deck\DeckController::delete
   methods: DELETE
   requirements:
     deck_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 deck_card_add:
   path: /decks/{deck_id}/cards
-  controller: App\Application\Deck\DeskController::addItem
+  controller: App\Application\Deck\DeckController::addItem
   methods: POST
   requirements:
     deck_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
 deck_card_delete:
   path: /decks/{deck_id}/cards/{card_id}
-  controller: App\Application\Deck\DeskController::deleteItem
+  controller: App\Application\Deck\DeckController::deleteItem
   methods: DELETE
   requirements:
     deck_id: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'

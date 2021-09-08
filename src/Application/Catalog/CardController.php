@@ -57,7 +57,7 @@ class CardController extends AbstractController
 			Response::HTTP_CREATED,
 			'',
 			null,
-			['Location' => $this->generateUrl('catalog_card_get', ['card_id' => $command->getId()->jsonSerialize()])]
+			['Location' => $this->generateUrl('catalog_card_get', ['card_id' => $this->uuidGenerator->toString($command->getId())])]
 		);
 	}
 
