@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Domain\Card\Command;
 
@@ -11,9 +12,9 @@ class AddCardCommand implements Command
 	private string $title;
 	private string $power;
 
-	public function __construct(Uuid $id, string $title, string $power)
+	public function __construct(string $title, string $power)
 	{
-		$this->id = $id;
+		$this->id = Uuid::v4();
 		$this->title = $title;
 		$this->power = $power;
 	}

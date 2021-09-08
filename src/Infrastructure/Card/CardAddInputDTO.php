@@ -1,10 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Infrastructure\Card;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CardAddDTO implements CardDTOInterface
+class CardAddInputDTO implements CardDTOInterface
 {
 	/**
 	 * @Assert\Type(
@@ -14,11 +15,11 @@ class CardAddDTO implements CardDTOInterface
 	 * @Assert\Length(
 	 *     min=2,
 	 *     max=255,
-	 *     minMessage="Card title minimum length is 2 characters",
-	 *     maxMessage="Card title maximum length is 255 characters"
+	 *     minMessage="Card title minimum length is {{ limit }} characters",
+	 *     maxMessage="Card title maximum length is {{ limit }} characters"
 	 * )
 	 */
-	private string $title;
+	private ?string $title;
 
 	/**
 	 * @Assert\NotBlank(
@@ -31,9 +32,9 @@ class CardAddDTO implements CardDTOInterface
 	 * @Assert\PositiveOrZero()
 	 * @Assert\LessThan(65535)
 	 */
-	private string $power;
+	private ?string $power;
 
-	public function __construct(string $title, string $power)
+	public function __construct(?string $title, ?string $power)
 	{
 		$this->title = $title;
 		$this->power = $power;

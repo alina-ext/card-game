@@ -1,20 +1,23 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Application\Catalog;
 
 use App\Domain\Card\Command\AddCardCommand;
+use App\Domain\Card\Command\DeleteCardCommand;
+use App\Domain\Card\Command\UpdateCardCommand;
 use App\Domain\Card\Query\GetCardQuery;
-use App\Infrastructure\Card\CardGetDTO;
+use App\Infrastructure\Card\CardGetInputDTO;
+use App\Infrastructure\Card\CardUpdateInputDTO;
 use App\Infrastructure\Card\ValidatorInterface;
 use App\Infrastructure\Common\Command\CommandBus;
 use App\Infrastructure\Common\Query\QueryBus;
 use App\Infrastructure\ResponseJson;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Infrastructure\Card\CardAddDTO;
+use App\Infrastructure\Card\CardAddInputDTO;
 //use Psr\Log\LoggerInterface;
 
 class CardController extends AbstractController
@@ -35,12 +38,12 @@ class CardController extends AbstractController
 	public function add(Request $request): JsonResponse {
 		$title = $request->get('title');
 		$power = $request->get('power');
-		$this->validator->validate(new CardAddDTO(
+		$this->validator->validate(new CardAddInputDTO(
 			$title,
 			$power
 		));
 
-		$command = new AddCardCommand(Uuid::v4(), $title, $power);
+		$command = new AddCardCommand($title, $power);
 		$this->commandBus->dispatch($command);
 
 		return ResponseJson::render(
@@ -54,15 +57,49 @@ class CardController extends AbstractController
 	public function getItem(Request $request): JsonResponse
 	{
 		$id = $request->get('card_id');
-		$this->validator->validate(new CardGetDTO($id));
+		$this->validator->validate(new CardGetInputDTO($id));
 
 		$query = new GetCardQuery($id);
 		$response = $this->queryBus->handle($query);
 
 		return ResponseJson::render(
-			Response::HTTP_CREATED,
+			Response::HTTP_OK,
 			'',
 			$response,
+		);
+	}
+
+	public function update(Request $request): JsonResponse {
+		$id = $request->get('card_id');
+		$title = $request->get('title');
+		$power = $request->get('power');
+		$this->validator->validate(new CardUpdateInputDTO(
+			$id,
+			$title,
+			$power
+		));
+
+		$command = new UpdateCardCommand($id, $title, $power);
+		$this->commandBus->dispatch($command);
+
+		return ResponseJson::render(
+			Response::HTTP_OK,
+			'',
+			null
+		);
+	}
+
+	public function delete(Request $request): JsonResponse {
+		$id = $request->get('card_id');
+		$this->validator->validate(new CardGetInputDTO($id));
+
+		$command = new DeleteCardCommand($id);
+		$this->commandBus->dispatch($command);
+
+		return ResponseJson::render(
+			Response::HTTP_OK,
+			'',
+			null
 		);
 	}
 }

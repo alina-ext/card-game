@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Domain\Card\Query;
 
@@ -6,18 +7,14 @@ use App\Domain\Card\Card;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Domain\Card\Response;
 use App\Infrastructure\Common\Query\QueryHandler;
-use App\Infrastructure\Card\ValidatorInterface;
 
 class GetCardHandler implements QueryHandler
 {
 	private CardRepositoryInterface $repository;
-	private ValidatorInterface $validator;
 
 	public function __construct(
-		ValidatorInterface $validator,
 		CardRepositoryInterface $repository,
 	) {
-		$this->validator = $validator;
 		$this->repository = $repository;
 	}
 

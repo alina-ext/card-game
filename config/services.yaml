@@ -49,6 +49,16 @@ services:
         class: App\Domain\Card\Command\AddCardHandler
         tags:
             - { name: command_handler, handles: App\Domain\Card\Command\AddCardCommand }
+    App\Domain\Card\Command\DeleteCardHandler:
+        public: true
+        class: App\Domain\Card\Command\DeleteCardHandler
+        tags:
+            - { name: command_handler, handles: App\Domain\Card\Command\DeleteCardCommand }
+    App\Domain\Card\Command\UpdateCardHandler:
+        public: true
+        class: App\Domain\Card\Command\UpdateCardHandler
+        tags:
+            - { name: command_handler, handles: App\Domain\Card\Command\UpdateCardCommand }
 
     #Query Handlers
     App\Domain\Card\Query\GetCardHandler:

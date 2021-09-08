@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -15,17 +16,17 @@ class Card
 	 * @ORM\Id
 	 * @ORM\Column(type="string", length=36, unique=true)
 	 */
-    private $id;
+    private string $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
-    private $title;
+    private string $title;
 
     /**
      * @ORM\Column(type="smallint", columnDefinition="unsigned")
      */
-    private $power;
+    private int $power;
 
 	public function getId(): string
 	{
@@ -39,7 +40,7 @@ class Card
 		return $this;
 	}
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -51,7 +52,7 @@ class Card
         return $this;
     }
 
-    public function getPower(): ?int
+    public function getPower(): int
     {
         return $this->power;
     }

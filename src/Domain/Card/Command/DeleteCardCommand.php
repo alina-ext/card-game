@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Card\Query;
+namespace App\Domain\Card\Command;
 
-use App\Infrastructure\Common\Query\Query;
+use App\Infrastructure\Common\Command\Command;
 
-class GetCardQuery implements Query
+class DeleteCardCommand implements Command
 {
 	private string $id;
 
