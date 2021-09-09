@@ -24,11 +24,6 @@ class DeckCardRepository extends ServiceEntityRepository implements DeckCardRepo
 		return $cards;
 	}
 
-	public function deleteByDeckId(string $deckId): void
-	{
-		// TODO: Implement deleteByDeckId() method.
-	}
-
 	public function addToDeck(string $deckId, array $cards): void
 	{
 		if (!$cards) {

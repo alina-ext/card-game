@@ -15,11 +15,6 @@ interface DeckCardRepositoryInterface
 
 	/**
 	 * @param string $deckId
-	 */
-	public function deleteByDeckId(string $deckId): void;
-
-	/**
-	 * @param string $deckId
 	 * @param Card[] $cards
 	 */
 	public function addToDeck(string $deckId, array $cards): void;

@@ -26,6 +26,13 @@ class DeckRepository extends ServiceEntityRepository implements DeckRepositoryIn
 	public function save(DeckModel $deck): Deck
 	{
 		$em = $this->getEntityManager();
+		if ($deck->isDeleted()) {
+			$this->deckCardRepository->deleteInDeck($deck->getId(), $deck->getCards());
+			$deckEntity = $this->find($deck->getId());
+			$em->remove($deckEntity);
+
+			return $deckEntity;
+		}
 		$entity = new Deck();
 		$entity
 			->setId($deck->getId())
@@ -51,7 +58,7 @@ class DeckRepository extends ServiceEntityRepository implements DeckRepositoryIn
 
 		//potential cards with updated amount
 		$commonItems = array_intersect_key($cardsFromDeck, $cardsCurrentState);
-		foreach($commonItems as $card) {
+		foreach ($commonItems as $card) {
 			if ($card->getAmount() !== $cardsCurrentState[$card->getId()]->getAmount()) {
 				$cardsToUpdate[] = $card;
 			}

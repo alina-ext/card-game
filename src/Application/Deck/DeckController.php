@@ -7,6 +7,7 @@ use App\Application\ApiController;
 use App\Domain\Deck\Command\AddDeckCommand;
 use App\Domain\Deck\Command\AddDeckCardCommand;
 use App\Domain\Deck\Command\DeleteDeckCardCommand;
+use App\Domain\Deck\Command\DeleteDeckCommand;
 use App\Domain\Deck\Query\GetDeckQuery;
 use App\Infrastructure\Deck\Card\DeckCardForm;
 use App\Infrastructure\Deck\DeckForm;
@@ -100,6 +101,20 @@ class DeckController extends ApiController
 
 		return ResponseJson::render(
 			Response::HTTP_CREATED,
+			'',
+			null
+		);
+	}
+
+	public function delete(Request $request): JsonResponse
+	{
+		$dto = $this->buildObject(['id' => $request->get('deck_id')], DeckIdForm::class);
+
+		$command = new DeleteDeckCommand($dto);
+		$this->commandBus->dispatch($command);
+
+		return ResponseJson::render(
+			Response::HTTP_OK,
 			'',
 			null
 		);

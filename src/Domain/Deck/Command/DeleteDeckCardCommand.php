@@ -3,19 +3,19 @@ declare(strict_types=1);
 
 namespace App\Domain\Deck\Command;
 
-use App\Domain\Deck\Card\DeckCardAddDTO;
+use App\Domain\Deck\Card\DeckCardDTO;
 use App\Infrastructure\Common\Command\Command;
 
 class DeleteDeckCardCommand implements Command
 {
-	private DeckCardAddDTO $dto;
+	private DeckCardDTO $dto;
 
-	public function __construct(DeckCardAddDTO $dto)
+	public function __construct(DeckCardDTO $dto)
 	{
 		$this->dto = $dto;
 	}
 
-	public function getDto(): DeckCardAddDTO
+	public function getDto(): DeckCardDTO
 	{
 		return $this->dto;
 	}

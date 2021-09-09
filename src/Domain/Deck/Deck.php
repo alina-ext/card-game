@@ -17,6 +17,7 @@ class Deck
 
 	private string $id;
 	private string $userId;
+	private bool $deleted = false;
 	/** @var Event[] */
 	private array $events;
 	/** @var Card[] */
@@ -154,5 +155,15 @@ class Deck
 		}
 		$response->setCards($cards);
 		$response->setPower($this->getPower());
+	}
+
+	public function setDeleted(): void
+	{
+		$this->deleted = true;
+	}
+
+	public function isDeleted(): bool
+	{
+		return $this->deleted;
 	}
 }

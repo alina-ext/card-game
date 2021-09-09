@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Deck\Card;
 
-use App\Domain\Deck\Card\DeckCardAddDTO;
+use App\Domain\Deck\Card\DeckCardDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;
@@ -23,7 +23,7 @@ class DeckCardForm extends AbstractType
 	final public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			'data_class' => DeckCardAddDTO::class
+			'data_class' => DeckCardDTO::class
 		]);
 	}
 }

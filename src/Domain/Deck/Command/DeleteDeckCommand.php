@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Deck\Query;
+namespace App\Domain\Deck\Command;
 
 use App\Domain\Deck\DeckIdDTO;
-use App\Infrastructure\Common\Query\Query;
+use App\Infrastructure\Common\Command\Command;
 
-class GetDeckQuery implements Query
+class DeleteDeckCommand implements Command
 {
 	private DeckIdDTO $dto;
 

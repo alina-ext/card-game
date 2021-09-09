@@ -6,7 +6,7 @@ namespace App\Domain\Deck\Card;
 use App\Infrastructure\Deck\DeckDTOInterface;
 use Symfony\Component\Uid\Uuid;
 
-class DeckCardAddDTO implements DeckDTOInterface
+class DeckCardDTO implements DeckDTOInterface
 {
 	private Uuid $deck_id;
 	private Uuid $card_id;
