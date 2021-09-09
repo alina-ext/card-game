@@ -6,7 +6,7 @@ namespace App\Domain\Deck\Command;
 use App\Domain\Deck\Card\DeckCardAddDTO;
 use App\Infrastructure\Common\Command\Command;
 
-class AddDeckCardCommand implements Command
+class DeleteDeckCardCommand implements Command
 {
 	private DeckCardAddDTO $dto;
 

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Deck\Card;
 
-use App\Domain\Deck\DeckCardAddDTO;
+use App\Domain\Deck\Card\DeckCardAddDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\UuidType;

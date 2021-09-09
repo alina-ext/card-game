@@ -4,13 +4,12 @@ declare(strict_types=1);
 namespace App\Domain\Deck\Command;
 
 use App\Domain\Card\CardRepositoryInterface;
-use App\Domain\Deck\Card\Card;
 use App\Domain\Deck\DeckRepositoryInterface;
 use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 use App\Infrastructure\Deck\ValidatorInterface;
 
-class AddDeckCardHandler implements CommandHandler
+class DeleteDeckCardHandler implements CommandHandler
 {
 	private DeckRepositoryInterface $repository;
 	private CardRepositoryInterface $cardRepository;
@@ -29,18 +28,15 @@ class AddDeckCardHandler implements CommandHandler
 		$this->uuidGenerator = $uuidGenerator;
 	}
 
-	public function __invoke(AddDeckCardCommand $command): void
+	public function __invoke(DeleteDeckCardCommand $command): void
 	{
 		$dto = $command->getDto();
 		$this->validator->validate($dto);
 
 		$deckModel = $this->repository->getById($this->uuidGenerator->toString($dto->getDeckId()));
 
-		$cardModel = $this->cardRepository->getById($this->uuidGenerator->toString($dto->getCardId()));
-		$cardDto = new Card($cardModel->getId(), $cardModel->getTitle(), $cardModel->getPower(), $dto->getAmount());
-
-		$deckModel->addCard($cardDto);
-		$deckModel->pushEvent('deck:card:add');
+		$deckModel->deleteCards($this->uuidGenerator->toString($dto->getCardId()), $dto->getAmount());
+		$deckModel->pushEvent('deck:card:delete');
 
 		$this->repository->saveCard($deckModel);
 

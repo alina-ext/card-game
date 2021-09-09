@@ -5,6 +5,7 @@ namespace App\Domain\Deck;
 
 use App\Domain\Deck\Card\Card;
 use App\Domain\Deck\Exceptions\DeckSizeLimitReachedException;
+use App\Domain\Deck\Exceptions\NotEnoughCards;
 use App\Entity\Event;
 use DateTime;
 use App\Domain\Deck\Card\Response AS CardResponse;
@@ -45,6 +46,23 @@ class Deck
 			$card->setAmount($card->getAmount() + $card->getAmount());
 		} else {
 			$this->cards[$card->getId()] = $card;
+		}
+	}
+
+	public function deleteCards(string $cardId, int $amount): void
+	{
+		if (array_key_exists($cardId, $this->cards)) {
+			$card = $this->cards[$cardId];
+			$newAmount = $card->getAmount() - $amount;
+			if ($newAmount < 0) {
+				throw new NotEnoughCards(sprintf('Not enough card %s in deck to delete', $cardId));
+			} else if (!$newAmount) {
+				unset($this->cards[$cardId]);
+			} else {
+				$card->setAmount($newAmount);
+			}
+		} else {
+			throw new NotEnoughCards(sprintf('No cards %s in deck', $cardId));
 		}
 	}
 

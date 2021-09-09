@@ -54,10 +54,11 @@ class DeckCardRepository extends ServiceEntityRepository implements DeckCardRepo
 			return;
 		}
 		$this->getEntityManager()->createQueryBuilder()
-			->delete('App\Infrastructure\Deck\Card\DeckCardRepository', 'DC')
+			->delete('App\Entity\DeckCard', 'DC')
 			->where('DC.deck_id = :deck_id AND DC.card_id IN (:card_ids)')
 			->setParameter('deck_id', $deckId)
-			->setParameter('card_ids', $cards);
+			->setParameter('card_ids', array_keys($cards))
+			->getQuery()->execute();
 	}
 
 	public function updateInDeck(string $deckId, array $cards): void

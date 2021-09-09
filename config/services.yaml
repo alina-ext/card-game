@@ -116,6 +116,14 @@ services:
             $cardRepository: '@App\Infrastructure\Card\CardRepository'
         tags:
             - { name: command_handler, handles: App\Domain\Deck\Command\AddDeckCardCommand }
+    App\Domain\Deck\Command\DeleteDeckCardHandler:
+        public: true
+        class: App\Domain\Deck\Command\DeleteDeckCardHandler
+        arguments:
+            $repository: '@App\Infrastructure\Deck\WrapperRepository'
+            $cardRepository: '@App\Infrastructure\Card\CardRepository'
+        tags:
+            - { name: command_handler, handles: App\Domain\Deck\Command\DeleteDeckCardCommand }
 
     #Query Handlers
     App\Domain\Card\Query\GetCardHandler:
