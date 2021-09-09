@@ -7,7 +7,7 @@ use App\Domain\Card\CardRepositoryInterface;
 use App\Domain\Deck\DeckRepositoryInterface;
 use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
-use App\Infrastructure\Deck\ValidatorInterface;
+use App\Infrastructure\ValidatorInterface;
 
 class DeleteDeckCardHandler implements CommandHandler
 {

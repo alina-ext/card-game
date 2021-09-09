@@ -6,7 +6,7 @@ namespace App\Domain\Card\Command;
 use App\Domain\Card\Card;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Domain\Card\Validator\CardGetDTO;
-use App\Infrastructure\Card\ValidatorInterface;
+use App\Infrastructure\ValidatorInterface;
 use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 

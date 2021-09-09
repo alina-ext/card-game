@@ -7,7 +7,7 @@ use App\Domain\Card\Card;
 use App\Domain\Card\Validator\CardUpdateDTO;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Infrastructure\Common\Command\CommandHandler;
-use App\Infrastructure\Card\ValidatorInterface;
+use App\Infrastructure\ValidatorInterface;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 
 class UpdateCardHandler implements CommandHandler

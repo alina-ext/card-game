@@ -3,34 +3,20 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Command;
 
+use App\Domain\Card\CardDTO;
 use App\Infrastructure\Common\Command\Command;
-use Symfony\Component\Uid\Uuid;
 
 class AddCardCommand implements Command
 {
-	private Uuid $id;
-	private string $title;
-	private string $power;
+	private CardDTO $dto;
 
-	public function __construct(Uuid $id, string $title, string $power)
+	public function __construct(CardDTO $dto)
 	{
-		$this->id = $id;
-		$this->title = $title;
-		$this->power = $power;
+		$this->dto = $dto;
 	}
 
-	public function getId(): Uuid
+	public function getDto(): CardDTO
 	{
-		return $this->id;
-	}
-
-	public function getTitle(): string
-	{
-		return $this->title;
-	}
-
-	public function getPower(): string
-	{
-		return $this->power;
+		return $this->dto;
 	}
 }

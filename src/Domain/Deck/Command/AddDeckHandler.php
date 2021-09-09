@@ -7,7 +7,7 @@ use App\Domain\Deck\Deck;
 use App\Domain\Deck\DeckRepositoryInterface;
 use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
-use App\Infrastructure\Deck\ValidatorInterface;
+use App\Infrastructure\ValidatorInterface;
 
 class AddDeckHandler implements CommandHandler
 {
@@ -30,7 +30,10 @@ class AddDeckHandler implements CommandHandler
 		$dto = $command->getDto();
 		$this->validator->validate($dto);
 
-		$model = new Deck($this->uuidGenerator->toString($dto->getId()), $this->uuidGenerator->toString($dto->getUserId()));
+		$model = new Deck(
+			$this->uuidGenerator->toString($dto->getId()),
+			$this->uuidGenerator->toString($dto->getUserId())
+		);
 		$model->pushEvent('deck:add');
 
 		$this->repository->save($model);

@@ -12,7 +12,7 @@ use App\Domain\Deck\Query\GetDeckQuery;
 use App\Infrastructure\Deck\Card\DeckCardForm;
 use App\Infrastructure\Deck\DeckForm;
 use App\Infrastructure\Deck\DeckIdForm;
-use App\Infrastructure\Deck\ValidatorInterface;
+use App\Infrastructure\ValidatorInterface;
 use App\Infrastructure\Common\Command\CommandBus;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 use App\Infrastructure\Common\Query\QueryBus;

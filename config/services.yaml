@@ -69,10 +69,8 @@ services:
         class: App\Infrastructure\Deck\Card\DeckCardRepository
 
     #Validators
-    App\Infrastructure\Card\ValidatorInterface:
-        class: App\Infrastructure\Card\Validator
-    App\Infrastructure\Deck\ValidatorInterface:
-        class: App\Infrastructure\Deck\Validator
+    App\Infrastructure\ValidatorInterface:
+        class: App\Infrastructure\Validator
 
     #Generators
     App\Infrastructure\Common\Generator\GeneratorInterface:

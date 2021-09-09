@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Application;
 
-use App\Infrastructure\Deck\ValidatorInterface;
+use App\Infrastructure\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class ApiController extends AbstractController

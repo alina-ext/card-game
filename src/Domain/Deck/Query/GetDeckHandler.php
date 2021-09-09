@@ -7,7 +7,7 @@ use App\Domain\Deck\DeckRepositoryInterface;
 use App\Domain\Deck\Response;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 use App\Infrastructure\Common\Query\QueryHandler;
-use App\Infrastructure\Deck\ValidatorInterface;
+use App\Infrastructure\ValidatorInterface;
 
 class GetDeckHandler implements QueryHandler
 {
