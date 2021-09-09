@@ -1,0 +1,28 @@
+App\Domain\Deck\DeckAddDTO:
+  properties:
+    id:
+      - NotBlank: { message: "Deck id can't be empty" }
+      - Uuid: { message: "Deck id is invalid Uuid type" }
+    user_id:
+      - NotBlank: { message: "User id can't be empty" }
+      - Uuid:  { message: "User id is invalid Uuid type" }
+
+App\Domain\Deck\DeckGetDTO:
+  properties:
+    id:
+      - NotBlank: { message: "Deck id can't be empty" }
+      - Uuid: { message: "Deck id is invalid Uuid type" }
+
+App\Domain\Deck\DeckCardAddDTO:
+  properties:
+    deck_id:
+      - NotBlank: { message: "Deck id can't be empty" }
+      - Uuid: { message: "Deck id is invalid Uuid type" }
+    card_id:
+      - NotBlank: { message: "Card id can't be empty" }
+      - Uuid:  { message: "Card id is invalid Uuid type" }
+    amount:
+      - Positive: { message: "Card amount can't negative or 0" }
+      - LessThanOrEqual:
+          value: 2
+          message: "Card amount can't more than 2"

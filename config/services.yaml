@@ -57,12 +57,16 @@ services:
             $publisher: '@App\Infrastructure\Common\Event\Publisher'
     App\Infrastructure\Deck\DeckRepository:
         class: App\Infrastructure\Deck\DeckRepository
+        arguments:
+            $deckCardRepository: '@App\Infrastructure\Deck\Card\DeckCardRepository'
     App\Infrastructure\Deck\WrapperRepository:
         class: App\Infrastructure\Deck\WrapperRepository
         arguments:
             $deckRepository: '@App\Infrastructure\Deck\DeckRepository'
             $eventRepository: '@App\Infrastructure\Common\Event\EventRepository'
             $publisher: '@App\Infrastructure\Common\Event\Publisher'
+    App\Infrastructure\Deck\Card\DeckCardRepository:
+        class: App\Infrastructure\Deck\Card\DeckCardRepository
 
     #Validators
     App\Infrastructure\Card\ValidatorInterface:
@@ -104,6 +108,14 @@ services:
             $repository: '@App\Infrastructure\Deck\WrapperRepository'
         tags:
             - { name: command_handler, handles: App\Domain\Deck\Command\AddDeckCommand }
+    App\Domain\Deck\Command\AddDeckCardHandler:
+        public: true
+        class: App\Domain\Deck\Command\AddDeckCardHandler
+        arguments:
+            $repository: '@App\Infrastructure\Deck\WrapperRepository'
+            $cardRepository: '@App\Infrastructure\Card\CardRepository'
+        tags:
+            - { name: command_handler, handles: App\Domain\Deck\Command\AddDeckCardCommand }
 
     #Query Handlers
     App\Domain\Card\Query\GetCardHandler:
@@ -121,4 +133,10 @@ services:
             $paginationService: '@App\Domain\Card\PaginationService'
         tags:
             - { name: command_handler, bus: query.bus, handles: App\Domain\Card\Query\GetCardListQuery }
-
+    App\Domain\Deck\Query\GetDeckHandler:
+        public: true
+        class: App\Domain\Deck\Query\GetDeckHandler
+        arguments:
+            $repository: '@App\Infrastructure\Deck\WrapperRepository'
+        tags:
+            - { name: command_handler, bus: query.bus, handles: App\Domain\Deck\Query\GetDeckQuery }

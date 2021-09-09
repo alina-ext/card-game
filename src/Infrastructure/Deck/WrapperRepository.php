@@ -40,4 +40,21 @@ class WrapperRepository implements DeckRepositoryInterface
 
 		return $model;
 	}
+
+	public function saveCard(DeckModel $deck): void {
+		$events = $deck->getEvents();
+		foreach ($events as $event) {
+			$this->eventRepository->push($event);
+		}
+		$this->deckRepository->saveCard($deck);
+		foreach ($events as $event) {
+			$this->publisher->publish($event);
+		}
+		$deck->deleteEvents();
+	}
+
+	public function getById(string $id): DeckModel
+	{
+		return $this->deckRepository->getById($id);
+	}
 }

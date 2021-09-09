@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Query;
 
-use App\Domain\Card\Card;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Domain\Card\Response;
 use App\Domain\Card\Validator\CardGetDTO;
@@ -34,13 +33,8 @@ class GetCardHandler implements QueryHandler
 		);
 		$this->validator->validate($cardDTO);
 
-		$modelDB = $this->repository->getById(
+		$model = $this->repository->getById(
 			$this->uuidGenerator->toString($query->getId())
-		);
-		$model = new Card(
-			$modelDB->getId(),
-			$modelDB->getTitle(),
-			$modelDB->getPower()
 		);
 		$response = new Response();
 		$model->fillResponse($response);

@@ -19,7 +19,7 @@ class CardAddDTO implements CardDTOInterface
 	/**
 	 * @Assert\Type(
 	 *     "string",
-	 *     message="Cart title {{ value }} is not a valid {{ type }}"
+	 *     message="Card title {{ value }} is not a valid {{ type }}"
 	 * )
 	 * @Assert\Length(
 	 *     min=2,

@@ -11,7 +11,7 @@ interface CardRepositoryInterface
 {
 	public function save(CardModel $card): Card;
 
-	public function getById(string $id): Card;
+	public function getById(string $id): CardModel;
 
 	public function getList(FilterService $filter): CardCollection;
 }

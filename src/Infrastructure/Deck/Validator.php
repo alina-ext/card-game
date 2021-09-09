@@ -5,9 +5,11 @@ namespace App\Infrastructure\Deck;
 
 use App\Domain\Deck\Exceptions\ValidationException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Infrastructure\Deck\ValidatorInterface AS VI;
 
+/*@TODO move class to common and use also for cards*/
 class Validator implements VI
 {
 	private ValidatorInterface $validator;
@@ -19,7 +21,7 @@ class Validator implements VI
 		$this->logger = $logger;
 	}
 
-	public function validate(DeckDTOInterface $DTO) {
+	public function validate(DeckDTOInterface|FormInterface $DTO) {
 		$errors = $this->validator->validate($DTO);
 		if (($count = $errors->count())) {
 			$messages = [];

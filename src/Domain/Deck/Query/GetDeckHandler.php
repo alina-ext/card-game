@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Deck\Command;
+namespace App\Domain\Deck\Query;
 
-use App\Domain\Deck\Deck;
 use App\Domain\Deck\DeckRepositoryInterface;
-use App\Infrastructure\Common\Command\CommandHandler;
+use App\Domain\Deck\Response;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
+use App\Infrastructure\Common\Query\QueryHandler;
 use App\Infrastructure\Deck\ValidatorInterface;
 
-class AddDeckHandler implements CommandHandler
+class GetDeckHandler implements QueryHandler
 {
 	private DeckRepositoryInterface $repository;
 	private ValidatorInterface $validator;
@@ -19,20 +19,22 @@ class AddDeckHandler implements CommandHandler
 		ValidatorInterface $validator,
 		DeckRepositoryInterface $repository,
 		GeneratorInterface $uuidGenerator
-	) {
+	)
+	{
 		$this->validator = $validator;
 		$this->repository = $repository;
 		$this->uuidGenerator = $uuidGenerator;
 	}
 
-	public function __invoke(AddDeckCommand $command): void
+	public function __invoke(GetDeckQuery $query): Response
 	{
-		$dto = $command->getDto();
+		$dto = $query->getDto();
 		$this->validator->validate($dto);
 
-		$model = new Deck($this->uuidGenerator->toString($dto->getId()), $this->uuidGenerator->toString($dto->getUserId()));
-		$model->pushEvent('deck:add');
+		$model = $this->repository->getById($this->uuidGenerator->toString($dto->getId()));
+		$response = new Response();
+		$model->fillResponse($response);
 
-		$this->repository->save($model);
+		return $response;
 	}
 }

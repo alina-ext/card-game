@@ -3,27 +3,20 @@ declare(strict_types=1);
 
 namespace App\Domain\Deck\Command;
 
+use App\Domain\Deck\DeckAddDTO;
 use App\Infrastructure\Common\Command\Command;
-use Symfony\Component\Uid\Uuid;
 
 class AddDeckCommand implements Command
 {
-	private Uuid $id;
-	private Uuid $userId;
+	private DeckAddDTO $dto;
 
-	public function __construct(Uuid $id, Uuid $userId)
+	public function __construct(DeckAddDTO $dto)
 	{
-		$this->id = $id;
-		$this->userId = $userId;
+		$this->dto = $dto;
 	}
 
-	public function getId(): Uuid
+	public function getDto(): DeckAddDTO
 	{
-		return $this->id;
-	}
-
-	public function getUserId(): Uuid
-	{
-		return $this->userId;
+		return $this->dto;
 	}
 }

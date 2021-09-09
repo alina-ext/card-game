@@ -15,14 +15,15 @@ CREATE TABLE IF NOT EXISTS decks (
     id char(36) NOT NULL PRIMARY KEY,
     user_id char(36) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+#ALTER TABLE decks CHANGE id id BINARY(16) NOT NULL COMMENT '(DC2Type:uuid)', CHANGE user_id user_id BINARY(16) NOT NULL COMMENT '(DC2Type:uuid)';
 
 CREATE TABLE IF NOT EXISTS decks_cards (
     deck_id char(36) NOT NULL,
     card_id char(36) NOT NULL,
     title varchar(255) NOT NULL,
     power smallint UNSIGNED NOT NULL,
-    amount smallint UNSIGNED NOT NULL DEFAULT 1,
-    UNIQUE KEY(deck_id, card_id)
+    amount smallint UNSIGNED NOT NULL,
+    PRIMARY KEY(deck_id, card_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE events (

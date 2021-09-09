@@ -54,13 +54,17 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 		return $entity;
 	}
 
-	public function getById(string $id): Card
+	public function getById(string $id): CardModel
 	{
 		if (($entity = $this->find($id)) === null) {
 			throw new NotFoundException(sprintf("No card with id %s exists", $id));
 		}
 
-		return $entity;
+		return new CardModel(
+			$entity->getId(),
+			$entity->getTitle(),
+			$entity->getPower()
+		);
 	}
 
 	public function getList(FilterService $filter): CardCollection

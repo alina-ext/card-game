@@ -34,6 +34,7 @@ class WrapperRepository implements CardRepositoryInterface
 			$this->eventRepository->push($event);
 		}
 		$model = $this->cardRepository->save($card);
+		//$card->dispatch($this->publisher);
 		foreach ($events as $event) {
 			$this->publisher->publish($event);
 		}
@@ -42,7 +43,7 @@ class WrapperRepository implements CardRepositoryInterface
 		return $model;
 	}
 
-	public function getById(string $id): Card
+	public function getById(string $id): CardModel
 	{
 		return $this->cardRepository->getById($id);
 	}

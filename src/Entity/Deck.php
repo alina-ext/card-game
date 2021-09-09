@@ -14,14 +14,14 @@ class Deck
 {
 	/**
 	 * @ORM\Id
-	 * @ORM\Column(type="string", length=36, unique=true)
+	 * @ORM\Column(type="string", length=36, unique=true, nullable=false)
 	 */
 	private string $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=36, nullable=false)
      */
-    private $user_id;
+    private string $user_id;
 
     public function getId(): string
     {
@@ -40,9 +40,9 @@ class Deck
         return $this->user_id;
     }
 
-    public function setUserId(string $user_id): self
+    public function setUserId(string $userId): self
     {
-        $this->user_id = $user_id;
+        $this->user_id = $userId;
 
         return $this;
     }

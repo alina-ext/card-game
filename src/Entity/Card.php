@@ -14,17 +14,17 @@ class Card
 {
 	/**
 	 * @ORM\Id
-	 * @ORM\Column(type="string", length=36, unique=true)
+	 * @ORM\Column(type="string", length=36, unique=true, nullable=false)
 	 */
     private string $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true, nullable=false)
      */
     private string $title;
 
     /**
-     * @ORM\Column(type="smallint", columnDefinition="unsigned")
+     * @ORM\Column(type="smallint", columnDefinition="unsigned", nullable=false)
      */
     private int $power;
 
