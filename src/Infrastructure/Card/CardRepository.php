@@ -33,6 +33,7 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 		if ($card->isDeleted()) {
 			if ($entity) {
 				$em->remove($entity);
+				$em->flush();
 				return;
 			} else {
 				throw new NotFoundException(sprintf('No card with id %s to delete', $card->getId()));

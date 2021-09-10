@@ -8,10 +8,8 @@ use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\ValidatorInterface;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 use App\Domain\Card\Card;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
 
-class AddCardHandler implements CommandHandler, MessageHandlerInterface
+class AddCardHandler implements CommandHandler
 {
 	private CardRepositoryInterface $repository;
 	private ValidatorInterface $validator;
@@ -45,8 +43,7 @@ class AddCardHandler implements CommandHandler, MessageHandlerInterface
 	public static function getHandledMessages(): iterable
 	{
 		yield AddCardCommand::class => [
-			'method' => '__invoke',
-			'from_transport' => 'async'
+			'method' => '__invoke'
 		];
 	}
 }

@@ -29,6 +29,7 @@
         "symfony/yaml": "5.3.*"
     },
     "require-dev": {
+        "php": "*"
     },
     "config": {
         "optimize-autoloader": true,

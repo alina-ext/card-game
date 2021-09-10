@@ -7,9 +7,25 @@ framework:
                 middleware:
                     - doctrine_transaction
             query.bus: ~
-            event.bus:
-                default_middleware: allow_no_handlers
+            #event.bus:
+            #    default_middleware: allow_no_handlers
 
         transports:
             sync: 'sync://'
-            async: '%env(MESSENGER_TRANSPORT_DSN)%'
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    delay: 2000
+                    max_retries: 3
+
+        routing:
+            'App\Domain\Card\Query\GetCardQuery': sync
+            'App\Domain\Card\Query\GetCardListQuery': sync
+            'App\Domain\Deck\Query\GetDeckQuery': sync
+            'App\Domain\Card\Command\AddCardCommand': async
+            'App\Domain\Card\Command\DeleteCardCommand': async
+            'App\Domain\Card\Command\UpdateCardCommand': async
+            'App\Domain\Deck\Command\AddDeckCommand': async
+            'App\Domain\Deck\Command\AddDeckCardCommand': async
+            'App\Domain\Deck\Command\DeleteDeckCommand': async
+            'App\Domain\Deck\Command\DeleteDeckCardCommand': async

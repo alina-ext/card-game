@@ -33,6 +33,8 @@ class DeckRepository extends ServiceEntityRepository implements DeckRepositoryIn
 			$this->deckCardRepository->deleteInDeck($deck->getId(), $deck->getCards());
 			$deckEntity = $this->find($deck->getId());
 			$em->remove($deckEntity);
+			$em->flush();
+			return;
 		}
 		$entity = new Deck();
 		$entity
@@ -40,6 +42,7 @@ class DeckRepository extends ServiceEntityRepository implements DeckRepositoryIn
 			->setUserId($deck->getUserId());
 		try {
 			$em->persist($entity);
+			$em->flush();
 		} catch (Exception $e) {
 			throw new DBException($e->getMessage(), $e->getCode(), $e);
 		}
