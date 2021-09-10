@@ -12,14 +12,6 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         public: false
 
-    _instanceof:
-        App\Infrastructure\Common\Command\CommandHandler:
-            tags:
-                - { name: messenger.message_handler, bus: command.bus }
-        App\Infrastructure\Common\Query\QueryHandler:
-            tags:
-                - { name: messenger.message_handler, bus: query.bus }
-
     App\Infrastructure\Common\Command\CommandBus:
         class: App\Infrastructure\Common\Command\MessengerCommandBus
 
@@ -79,6 +71,14 @@ services:
     App\Infrastructure\Common\Generator\GeneratorInterface:
         class: App\Infrastructure\Common\Generator\UuidGenerator
 
+    _instanceof:
+        App\Infrastructure\Common\Command\CommandHandler:
+            tags:
+                - { name: messenger.message_handler, bus: command.bus }
+        App\Infrastructure\Common\Query\QueryHandler:
+            tags:
+                - { name: messenger.message_handler, bus: query.bus }
+
     #Query handlers
     card_query_handlers:
         namespace: App\Domain\Card\Query\
@@ -112,5 +112,3 @@ services:
         class: App\Domain\Deck\Command\AddDeckHandler
         arguments:
             $repository: '@App\Infrastructure\Deck\WrapperRepository'
-        tags:
-            - { name: messenger.message_handler, handles: App\Domain\Deck\Command\DeleteDeckCommand }

@@ -38,8 +38,12 @@ class DeleteDeckHandler implements CommandHandler
 		$deckModel->pushEvent('deck:delete');
 
 		$this->repository->save($deckModel);
+	}
 
-//		$response = new Response();
-//		$deckModel->fillResponse($response);
+	public static function getHandledMessages(): iterable
+	{
+		yield DeleteDeckCardCommand::class => [
+			'method' => '__invoke'
+		];
 	}
 }

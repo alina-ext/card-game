@@ -43,8 +43,12 @@ class AddDeckCardHandler implements CommandHandler
 		$deckModel->pushEvent('deck:card:add');
 
 		$this->repository->saveCard($deckModel);
+	}
 
-//		$response = new Response();
-//		$deckModel->fillResponse($response);
+	public static function getHandledMessages(): iterable
+	{
+		yield AddDeckCardCommand::class => [
+			'method' => '__invoke'
+		];
 	}
 }

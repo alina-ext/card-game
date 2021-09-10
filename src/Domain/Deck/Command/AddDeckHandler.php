@@ -38,4 +38,11 @@ class AddDeckHandler implements CommandHandler
 
 		$this->repository->save($model);
 	}
+
+	public static function getHandledMessages(): iterable
+	{
+		yield AddDeckCommand::class => [
+			'method' => '__invoke'
+		];
+	}
 }

@@ -40,4 +40,11 @@ class DeleteCardHandler implements CommandHandler
 
 		$this->repository->save($model);
 	}
+
+	public static function getHandledMessages(): iterable
+	{
+		yield DeleteCardCommand::class => [
+			'method' => '__invoke'
+		];
+	}
 }
