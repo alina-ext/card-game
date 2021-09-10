@@ -6,11 +6,17 @@ namespace App\Domain\Card;
 use App\Infrastructure\DTOInterface;
 use Symfony\Component\Uid\Uuid;
 
-class CardDTO implements DTOInterface
+class CardEditDTO implements DTOInterface
 {
 	private Uuid $id;
-	private string $title;
-	private int $power;
+	private ?string $title;
+	private ?int $power;
+
+	public function __construct()
+	{
+		$this->title = null;
+		$this->power = null;
+	}
 
 	public function getId(): Uuid
 	{
@@ -22,7 +28,7 @@ class CardDTO implements DTOInterface
 		$this->id = $id;
 	}
 
-	public function getTitle(): string
+	public function getTitle(): ?string
 	{
 		return $this->title;
 	}
@@ -32,7 +38,7 @@ class CardDTO implements DTOInterface
 		$this->title = $title;
 	}
 
-	public function getPower(): int
+	public function getPower(): ?int
 	{
 		return $this->power;
 	}

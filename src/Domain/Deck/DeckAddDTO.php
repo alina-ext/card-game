@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Domain\Deck;
 
-use App\Infrastructure\Deck\DeckDTOInterface;
+use App\Infrastructure\DTOInterface;
 use Symfony\Component\Uid\Uuid;
 
-class DeckAddDTO implements DeckDTOInterface
+class DeckAddDTO implements DTOInterface
 {
 	private Uuid $id;
 	private Uuid $user_id;

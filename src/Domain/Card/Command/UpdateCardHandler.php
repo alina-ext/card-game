@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Command;
 
-use App\Domain\Card\Card;
-use App\Domain\Card\Validator\CardUpdateDTO;
 use App\Domain\Card\CardRepositoryInterface;
 use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\ValidatorInterface;
@@ -20,7 +18,8 @@ class UpdateCardHandler implements CommandHandler
 		ValidatorInterface $validator,
 		CardRepositoryInterface $repository,
 		GeneratorInterface $uuidGenerator
-	) {
+	)
+	{
 		$this->validator = $validator;
 		$this->repository = $repository;
 		$this->uuidGenerator = $uuidGenerator;
@@ -28,29 +27,17 @@ class UpdateCardHandler implements CommandHandler
 
 	public function __invoke(UpdateCardCommand $command): void
 	{
-		$cardDTO = new CardUpdateDTO(
-			$command->getId(),
-			$command->getTitle(),
-			$command->getPower()
-		);
-		$this->validator->validate($cardDTO);
+		$dto = $command->getDto();
+		$this->validator->validate($dto);
 
-		$entity = $this->repository->getById(
-			$this->uuidGenerator->toString($command->getId())
+		$model = $this->repository->getById(
+			$this->uuidGenerator->toString($dto->getId())
 		);
-		$model = new Card(
-			$entity->getId(),
-			$entity->getTitle(),
-			$entity->getPower()
-		);
-		$model->setEntity($entity);
-		$title = $cardDTO->getTitle();
-		if (null !== $title) {
+		if (null !== ($title = $dto->getTitle())) {
 			$model->setTitle($title);
 			$model->pushEvent('card:update:title');
 		}
-		$power = $cardDTO->getPower();
-		if (null !== $power) {
+		if (null !== ($power = $dto->getPower())) {
 			$model->setPower(intval($power));
 			$model->pushEvent('card:update:power');
 		}

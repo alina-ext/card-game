@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Query;
 
+use App\Domain\Card\CardIdDTO;
 use App\Infrastructure\Common\Query\Query;
-use Symfony\Component\Uid\Uuid;
 
 class GetCardQuery implements Query
 {
-	private Uuid $id;
+	private CardIdDTO $dto;
 
-	public function __construct(Uuid $id)
+	public function __construct(CardIdDTO $dto)
 	{
-		$this->id = $id;
+		$this->dto = $dto;
 	}
 
-	public function getId(): Uuid
+	public function getDto(): CardIdDTO
 	{
-		return $this->id;
+		return $this->dto;
 	}
 }

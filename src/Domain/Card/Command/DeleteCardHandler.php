@@ -5,7 +5,6 @@ namespace App\Domain\Card\Command;
 
 use App\Domain\Card\Card;
 use App\Domain\Card\CardRepositoryInterface;
-use App\Domain\Card\Validator\CardGetDTO;
 use App\Infrastructure\ValidatorInterface;
 use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
@@ -28,21 +27,17 @@ class DeleteCardHandler implements CommandHandler
 
 	public function __invoke(DeleteCardCommand $command): void
 	{
-		$cardDTO = new CardGetDTO(
-			$command->getId(),
-		);
-		$this->validator->validate($cardDTO);
+		$dto = $command->getDto();
+		$this->validator->validate($dto);
 
-		$entity = $this->repository->getById(
-			$this->uuidGenerator->toString($command->getId())
-		);
 		$model = new Card(
-			$entity->getId(),
-			$entity->getTitle(),
-			$entity->getPower(),
+			$this->uuidGenerator->toString($dto->getId()),
+			'',
+			0,
 			true
 		);
-		$model->setEntity($entity);
+		$model->pushEvent('card:delete');
+
 		$this->repository->save($model);
 	}
 }

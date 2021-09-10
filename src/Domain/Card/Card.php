@@ -5,7 +5,6 @@ namespace App\Domain\Card;
 
 use App\Entity\Event;
 use DateTime;
-use App\Entity\Card as CardEntity;
 
 class Card
 {
@@ -15,7 +14,6 @@ class Card
 	private bool $deleted;
 	/** @var Event[] */
 	private array $events;
-	private ?CardEntity $entity = null;
 
 	public function __construct(string $id, string $title, int $power, bool $deleted = false)
 	{
@@ -23,25 +21,6 @@ class Card
 		$this->title = $title;
 		$this->power = $power;
 		$this->deleted = $deleted;
-		$this->events = [];
-	}
-
-	public function pushEvent(string $eventTitle)
-	{
-		$event = new Event();
-		$event->setTitle($eventTitle);
-		$event->setData(json_encode($this->getCard()));
-		$event->setTm(new DateTime());
-		$this->events[] = $event;
-	}
-
-	public function getEvents(): array
-	{
-		return $this->events;
-	}
-
-	public function deleteEvents(): void
-	{
 		$this->events = [];
 	}
 
@@ -70,21 +49,29 @@ class Card
 		$this->power = $power;
 	}
 
-	public function setEntity(CardEntity $entity): void
-	{
-		$this->entity = $entity;
-	}
-
-	public function getEntity(): ?CardEntity
-	{
-		return $this->entity;
-	}
-
 	public function isDeleted(): bool
 	{
 		return $this->deleted;
 	}
 
+	public function pushEvent(string $eventTitle): void
+	{
+		$event = new Event();
+		$event->setTitle($eventTitle);
+		$event->setData(json_encode($this->getCard()));
+		$event->setTm(new DateTime());
+		$this->events[] = $event;
+	}
+
+	public function getEvents(): array
+	{
+		return $this->events;
+	}
+
+	public function deleteEvents(): void
+	{
+		$this->events = [];
+	}
 	public function getCard()
 	{
 		return [

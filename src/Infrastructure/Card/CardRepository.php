@@ -22,18 +22,21 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 		parent::__construct($registry, Card::class);
 	}
 
-	public function save(CardModel $card): Card
+	public function save(CardModel $card): void
 	{
 		$em = $this->getEntityManager();
-		$entity = $card->getEntity();
+		$entity = $this->find($card->getId());
 
 		if ($card->isDeleted()) {
-			$em->remove($entity);
-			return $entity;
+			if ($entity) {
+				$em->remove($entity);
+				return;
+			} else {
+				throw new NotFoundException(sprintf('No card with id %s to delete', $card->getId()));
+			}
+
 		}
-		$bAdd = false;
 		if (!$entity) {
-			$bAdd = true;
 			$entity = new Card();
 		}
 		$entity
@@ -41,17 +44,13 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 			->setTitle($card->getTitle())
 			->setPower($card->getPower());
 		try {
-			if ($bAdd) {
-				$em->persist($entity);
-			}
+			$em->persist($entity);
 			$em->flush();
 		} catch (UniqueConstraintViolationException $e) {
 			throw new ConflictException(sprintf("Card with title %s already exists", $card->getTitle()));
 		} catch (Exception $e) {
 			throw new DBException($e->getMessage(), $e->getCode(), $e);
 		}
-
-		return $entity;
 	}
 
 	public function getById(string $id): CardModel

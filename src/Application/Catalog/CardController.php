@@ -9,8 +9,9 @@ use App\Domain\Card\Command\DeleteCardCommand;
 use App\Domain\Card\Command\UpdateCardCommand;
 use App\Domain\Card\Query\GetCardListQuery;
 use App\Domain\Card\Query\GetCardQuery;
-use App\Infrastructure\Card\Validator\CardGetDTO;
-use App\Infrastructure\Card\Validator\CardUpdateDTO;
+use App\Infrastructure\Card\CardEditForm;
+use App\Infrastructure\Card\CardIdForm;
+use App\Infrastructure\Card\FilterForm;
 use App\Infrastructure\ValidatorInterface;
 use App\Infrastructure\Common\Command\CommandBus;
 use App\Infrastructure\Common\Query\QueryBus;
@@ -24,7 +25,6 @@ use App\Infrastructure\Common\Generator\GeneratorInterface;
 class CardController extends ApiController
 {
 	private GeneratorInterface $uuidGenerator;
-	private ValidatorInterface $validator;
 	private QueryBus $queryBus;
 	private CommandBus $commandBus;
 
@@ -36,7 +36,6 @@ class CardController extends ApiController
 	)
 	{
 		$this->uuidGenerator = $uuidGenerator;
-		$this->validator = $validator;
 		$this->queryBus = $queryBus;
 		$this->commandBus = $commandBus;
 		parent::__construct($validator);
@@ -63,10 +62,10 @@ class CardController extends ApiController
 
 	public function getItem(Request $request): JsonResponse
 	{
-		$id = $this->uuidGenerator->fromString($request->get('card_id'));
-		$this->validator->validate(new CardGetDTO($id));
-
-		$query = new GetCardQuery($id);
+		$dto = $this->buildObject([
+			'id' => $request->get('card_id'),
+		], CardIdForm::class);
+		$query = new GetCardQuery($dto);
 		$response = $this->queryBus->handle($query);
 
 		return ResponseJson::render(
@@ -78,16 +77,11 @@ class CardController extends ApiController
 
 	public function update(Request $request): JsonResponse
 	{
-		$id = $this->uuidGenerator->fromString($request->get('card_id'));
-		$title = $request->get('title');
-		$power = $request->get('power');
-		$this->validator->validate(new CardUpdateDTO(
-			$id,
-			$title,
-			$power
-		));
+		parse_str($request->getContent(), $data);
+		$data['id'] = $request->get('card_id');
+		$dto = $this->buildObject($data, CardEditForm::class);
 
-		$command = new UpdateCardCommand($id, $title, $power);
+		$command = new UpdateCardCommand($dto);
 		$this->commandBus->dispatch($command);
 
 		return ResponseJson::render(
@@ -99,10 +93,11 @@ class CardController extends ApiController
 
 	public function delete(Request $request): JsonResponse
 	{
-		$id = $this->uuidGenerator->fromString($request->get('card_id'));
-		$this->validator->validate(new CardGetDTO($id));
+		$dto = $this->buildObject([
+			'id' => $request->get('card_id'),
+		], CardIdForm::class);
 
-		$command = new DeleteCardCommand($id);
+		$command = new DeleteCardCommand($dto);
 		$this->commandBus->dispatch($command);
 
 		return ResponseJson::render(
@@ -114,12 +109,11 @@ class CardController extends ApiController
 
 	public function list(Request $request): JsonResponse
 	{
-		$page = $request->get('page_id', 1);
-		if (!is_numeric($page) || $page != intval($page) || $page <= 0) {
-			return ResponseJson::render(Response::HTTP_BAD_REQUEST, 'Invalid page');
-		}
+		$dto = $this->buildObject([
+			'page_id' => $request->get('page_id'),
+		], FilterForm::class);
 
-		$query = new GetCardListQuery(intval($page));
+		$query = new GetCardListQuery($dto);
 		$response = $this->queryBus->handle($query);
 
 		return ResponseJson::render(

@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Deck;
+namespace App\Domain\Card;
 
 use App\Infrastructure\DTOInterface;
 use Symfony\Component\Uid\Uuid;
 
-class DeckIdDTO implements DTOInterface
+class CardIdDTO implements DTOInterface
 {
 	private Uuid $id;
 

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Infrastructure;
 
-use App\Infrastructure\Card\CardDTOInterface;
-use App\Infrastructure\Deck\DeckDTOInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,7 +19,7 @@ class Validator implements VI
 		$this->logger = $logger;
 	}
 
-	public function validate(DeckDTOInterface|CardDTOInterface|FormInterface $DTO) {
+	public function validate(DTOInterface|FormInterface $DTO) {
 		$errors = $this->validator->validate($DTO);
 		if (($count = $errors->count())) {
 			$messages = [];

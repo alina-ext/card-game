@@ -46,3 +46,36 @@ App\Domain\Card\CardDTO:
       - LessThan:
           value: 65535
           message: "Card power can't be more than 65535"
+
+App\Domain\Card\CardIdDTO:
+  properties:
+    id:
+      - NotBlank: { message: "Card id can't be empty" }
+      - Uuid: { message: "Card id is invalid Uuid type" }
+
+App\Domain\Card\CardEditDTO:
+  constraints:
+    - Expression:
+        expression: "this.getTitle() || this.getPower()>=0"
+        message: "Required title or power"
+  properties:
+    id:
+      - NotBlank: { message: "Card id can't be empty" }
+      - Uuid: { message: "Card id is invalid Uuid type" }
+    title:
+      - Length:
+          min: 2
+          max: 255
+          minMessage: 'Card title minimum length is {{ limit }} characters'
+          maxMessage: 'Card title maximum length is {{ limit }} characters'
+    power:
+      - PositiveOrZero: { message: "Card power can't be negative or 0" }
+      - LessThan:
+          value: 65535
+          message: "Card power can't be more than 65535"
+
+App\Domain\Card\FilterDTO:
+  properties:
+    page_id:
+      - NotBlank: { message: "Page can't be empty" }
+      - Positive: { message: "Page must be positive number" }

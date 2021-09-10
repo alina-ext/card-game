@@ -5,7 +5,6 @@ namespace App\Domain\Card\Query;
 
 use App\Domain\Card\CardRepositoryInterface;
 use App\Domain\Card\Response;
-use App\Domain\Card\Validator\CardGetDTO;
 use App\Infrastructure\ValidatorInterface;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 use App\Infrastructure\Common\Query\QueryHandler;
@@ -28,14 +27,13 @@ class GetCardHandler implements QueryHandler
 
 	public function __invoke(GetCardQuery $query): Response
 	{
-		$cardDTO = new CardGetDTO(
-			$query->getId(),
-		);
-		$this->validator->validate($cardDTO);
+		$dto = $query->getDto();
+		$this->validator->validate($dto);
 
 		$model = $this->repository->getById(
-			$this->uuidGenerator->toString($query->getId())
+			$this->uuidGenerator->toString($dto->getId())
 		);
+
 		$response = new Response();
 		$model->fillResponse($response);
 

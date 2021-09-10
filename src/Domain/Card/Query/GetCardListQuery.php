@@ -3,19 +3,20 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Query;
 
+use App\Infrastructure\Card\FilterDTO;
 use App\Infrastructure\Common\Query\Query;
 
 class GetCardListQuery implements Query
 {
-	private int $page;
+	private FilterDTO $dto;
 
-	public function __construct(int $page)
+	public function __construct(FilterDTO $dto)
 	{
-		$this->page = $page;
+		$this->dto = $dto;
 	}
 
-	public function getPage(): int
+	public function getDto(): FilterDTO
 	{
-		return $this->page;
+		return $this->dto;
 	}
 }

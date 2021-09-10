@@ -3,34 +3,20 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Command;
 
+use App\Domain\Card\CardEditDTO;
 use App\Infrastructure\Common\Command\Command;
-use Symfony\Component\Uid\Uuid;
 
 class UpdateCardCommand implements Command
 {
-	private Uuid $id;
-	private ?string $title;
-	private ?string $power;
+	private CardEditDTO $dto;
 
-	public function __construct(Uuid $id, ?string $title, ?string $power)
+	public function __construct(CardEditDTO $dto)
 	{
-		$this->id = $id;
-		$this->title = $title;
-		$this->power = $power;
+		$this->dto = $dto;
 	}
 
-	public function getId(): Uuid
+	public function getDto(): CardEditDTO
 	{
-		return $this->id;
-	}
-
-	public function getTitle(): ?string
-	{
-		return $this->title;
-	}
-
-	public function getPower(): ?string
-	{
-		return $this->power;
+		return $this->dto;
 	}
 }

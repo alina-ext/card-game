@@ -6,7 +6,6 @@ namespace App\Infrastructure\Card;
 use App\Domain\Card\Card as CardModel;
 use App\Domain\Card\CardCollection;
 use App\Domain\Card\CardRepositoryInterface;
-use App\Entity\Card;
 use App\Infrastructure\Common\Event\EventRepositoryInterface;
 use App\Infrastructure\Common\Event\Publisher;
 
@@ -27,20 +26,18 @@ class WrapperRepository implements CardRepositoryInterface
 		$this->publisher = $publisher;
 	}
 
-	public function save(CardModel $card): Card
+	public function save(CardModel $card): void
 	{
 		$events = $card->getEvents();
 		foreach ($events as $event) {
 			$this->eventRepository->push($event);
 		}
-		$model = $this->cardRepository->save($card);
+		$this->cardRepository->save($card);
 		//$card->dispatch($this->publisher);
 		foreach ($events as $event) {
 			$this->publisher->publish($event);
 		}
 		$card->deleteEvents();
-
-		return $model;
 	}
 
 	public function getById(string $id): CardModel
