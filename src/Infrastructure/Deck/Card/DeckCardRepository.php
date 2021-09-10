@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Deck\Card;
 
+use App\Domain\Card\CardRepositoryInterface;
+use App\Domain\Deck\Card\Card;
 use App\Domain\Deck\Exceptions\NotFoundException;
 use App\Domain\Deck\Card\DeckCardRepositoryInterface;
 use App\Entity\DeckCard;
@@ -11,19 +13,48 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class DeckCardRepository extends ServiceEntityRepository implements DeckCardRepositoryInterface
 {
-	public function __construct(ManagerRegistry $registry)
+	private CardRepositoryInterface $cardRepository;
+
+	public function __construct(ManagerRegistry $registry, CardRepositoryInterface $cardRepository)
 	{
+		$this->cardRepository = $cardRepository;
 		parent::__construct($registry, DeckCard::class);
 	}
 
-	public function getByDeckId(string $deckId): array {
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getByDeckId(string $deckId): array
+	{
 		if (($cards = $this->findBy(['deck_id' => $deckId])) === null) {
 			throw new NotFoundException(sprintf("No deck with id %s exists", $deckId));
 		}
+		$ids = array_map(function ($card) {
+			return $card->getCardId();
+		}, $cards);
+		$originalCards = $ids ? $this->cardRepository->getByIds($ids) : [];
 
-		return $cards;
+		$result = [];
+		foreach ($cards as $card) {
+			$id = $card->getCardId();
+			$bExists = array_key_exists($id, $originalCards);
+			$result[$id] = new Card(
+				$id,
+				$card->getTitle(),
+				$card->getPower(),
+				$card->getAmount(),
+				!$bExists,
+				$bExists ? $originalCards[$id]->getTitle() : null,
+				$bExists ? $originalCards[$id]->getPower() : null,
+			);
+		}
+
+		return $result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function addToDeck(string $deckId, array $cards): void
 	{
 		if (!$cards) {
@@ -43,6 +74,9 @@ class DeckCardRepository extends ServiceEntityRepository implements DeckCardRepo
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function deleteInDeck(string $deckId, array $cards): void
 	{
 		if (!$cards) {
@@ -56,6 +90,9 @@ class DeckCardRepository extends ServiceEntityRepository implements DeckCardRepo
 			->getQuery()->execute();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function updateInDeck(string $deckId, array $cards): void
 	{
 		if (!$cards) {

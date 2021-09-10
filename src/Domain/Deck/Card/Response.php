@@ -57,14 +57,19 @@ class Response implements Payload
 			'title' => $this->title,
 			'power' => $this->power,
 			'amount' => $this->amount,
-			'is_deleted' => $this->isDeleted,
 			'changes' => [],
 		];
+		if ($this->isDeleted) {
+			$payload['is_deleted'] = $this->isDeleted;
+		}
 		if ($this->originalTitle && strcmp($this->originalTitle, $this->title) !== 0) {
 			$payload['changes']['title'] = $this->originalTitle;
 		}
 		if ($this->originalPower && $this->originalPower != $this->power) {
 			$payload['changes']['power'] = $this->originalPower;
+		}
+		if (!$payload['changes']) {
+			unset($payload['changes']);
 		}
 
 		return $payload;

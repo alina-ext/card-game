@@ -5,7 +5,6 @@ namespace App\Infrastructure\Deck;
 
 use App\Domain\Deck\Deck as DeckModel;
 use App\Domain\Deck\DeckRepositoryInterface;
-use App\Entity\Deck;
 use App\Infrastructure\Common\Event\EventRepositoryInterface;
 use App\Infrastructure\Common\Event\Publisher;
 
@@ -26,21 +25,25 @@ class WrapperRepository implements DeckRepositoryInterface
 		$this->publisher = $publisher;
 	}
 
-	public function save(DeckModel $deck): Deck
+	/**
+	 * {@inheritDoc}
+	 */
+	public function save(DeckModel $deck): void
 	{
 		$events = $deck->getEvents();
 		foreach ($events as $event) {
 			$this->eventRepository->push($event);
 		}
-		$model = $this->deckRepository->save($deck);
+		$this->deckRepository->save($deck);
 		foreach ($events as $event) {
 			$this->publisher->publish($event);
 		}
 		$deck->deleteEvents();
-
-		return $model;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function saveCard(DeckModel $deck): void {
 		$events = $deck->getEvents();
 		foreach ($events as $event) {
@@ -53,6 +56,9 @@ class WrapperRepository implements DeckRepositoryInterface
 		$deck->deleteEvents();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getById(string $id): DeckModel
 	{
 		return $this->deckRepository->getById($id);

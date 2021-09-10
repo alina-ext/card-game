@@ -22,6 +22,9 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 		parent::__construct($registry, Card::class);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function save(CardModel $card): void
 	{
 		$em = $this->getEntityManager();
@@ -53,6 +56,25 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getByIds(array $ids): array
+	{
+		$data = $this->findBy(['id' => $ids]);
+		return array_reduce($data, function ($acc, $entity) {
+			$acc[$entity->getId()] = new CardModel(
+				$entity->getId(),
+				$entity->getTitle(),
+				$entity->getPower()
+			);
+			return $acc;
+		}, []);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getById(string $id): CardModel
 	{
 		if (($entity = $this->find($id)) === null) {
@@ -66,6 +88,9 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
 		);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getList(FilterService $filter): CardCollection
 	{
 		$em = $this->getEntityManager();

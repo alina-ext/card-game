@@ -66,7 +66,7 @@ class DeckController extends ApiController
 		$response = $this->queryBus->handle($query);
 
 		return ResponseJson::render(
-			Response::HTTP_CREATED,
+			Response::HTTP_OK,
 			'',
 			$response
 		);
@@ -93,6 +93,7 @@ class DeckController extends ApiController
 	{
 		parse_str($request->getContent(), $data);
 		$data['deck_id'] = $request->get('deck_id');
+		$data['card_id'] = $request->get('card_id');
 
 		$dto = $this->buildObject($data, DeckCardForm::class);
 
@@ -100,7 +101,7 @@ class DeckController extends ApiController
 		$this->commandBus->dispatch($command);
 
 		return ResponseJson::render(
-			Response::HTTP_CREATED,
+			Response::HTTP_OK,
 			'',
 			null
 		);

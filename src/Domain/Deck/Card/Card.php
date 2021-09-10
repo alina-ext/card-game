@@ -10,14 +10,18 @@ class Card
 	private int $power;
 	private int $amount;
 	private bool $deleted;
+	private ?string $originalTitle;
+	private ?int $originalPower;
 
-	public function __construct(string $id, string $title, int $power, int $amount, bool $deleted = false)
+	public function __construct(string $id, string $title, int $power, int $amount, bool $deleted = false, string $originalTitle = null, int $originalPower = null)
 	{
 		$this->id = $id;
 		$this->title = $title;
 		$this->power = $power;
 		$this->amount = $amount;
 		$this->deleted = $deleted;
+		$this->originalTitle = $originalTitle;
+		$this->originalPower = $originalPower;
 	}
 
 	public function getId(): string
@@ -52,8 +56,7 @@ class Card
 		$response->setPower($this->power);
 		$response->setAmount($this->amount);
 		$response->setIsDeleted($this->deleted);
-
-		$response->setOriginalTitle('');
-		$response->setOriginalPower(0);
+		$response->setOriginalTitle($this->originalTitle);
+		$response->setOriginalPower($this->originalPower);
 	}
 }

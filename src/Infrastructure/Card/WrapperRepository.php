@@ -25,7 +25,9 @@ class WrapperRepository implements CardRepositoryInterface
 		$this->eventRepository = $eventRepository;
 		$this->publisher = $publisher;
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public function save(CardModel $card): void
 	{
 		$events = $card->getEvents();
@@ -39,12 +41,23 @@ class WrapperRepository implements CardRepositoryInterface
 		}
 		$card->deleteEvents();
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getByIds(array $ids): array
+	{
+		return $this->cardRepository->getByIds($ids);
+	}
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getById(string $id): CardModel
 	{
 		return $this->cardRepository->getById($id);
 	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getList(FilterService $filter): CardCollection
 	{
 		return $this->cardRepository->getList($filter);

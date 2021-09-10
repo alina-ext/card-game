@@ -10,6 +10,7 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false
 
     _instanceof:
         App\Infrastructure\Common\Command\CommandHandler:
@@ -67,6 +68,8 @@ services:
             $publisher: '@App\Infrastructure\Common\Event\Publisher'
     App\Infrastructure\Deck\Card\DeckCardRepository:
         class: App\Infrastructure\Deck\Card\DeckCardRepository
+        arguments:
+            $cardRepository: '@App\Infrastructure\Card\CardRepository'
 
     #Validators
     App\Infrastructure\ValidatorInterface:
@@ -76,81 +79,38 @@ services:
     App\Infrastructure\Common\Generator\GeneratorInterface:
         class: App\Infrastructure\Common\Generator\UuidGenerator
 
-    #Command Handlers
-    App\Domain\Card\Command\AddCardHandler:
-        public: true
-        class: App\Domain\Card\Command\AddCardHandler
+    #Query handlers
+    card_query_handlers:
+        namespace: App\Domain\Card\Query\
+        resource: '../src/Domain/Card/Query/*Handler.php'
+        autoconfigure: false
         arguments:
             $repository: '@App\Infrastructure\Card\WrapperRepository'
-        tags:
-            - { name: command_handler, handles: App\Domain\Card\Command\AddCardCommand }
-    App\Domain\Card\Command\DeleteCardHandler:
-        public: true
-        class: App\Domain\Card\Command\DeleteCardHandler
+    deck_query_handlers:
+        namespace: App\Domain\Deck\Query\
+        resource: '../src/Domain/Deck/Query/*Handler.php'
+        autoconfigure: false
         arguments:
-            $repository: '@App\Infrastructure\Card\WrapperRepository'
-        tags:
-            - { name: command_handler, handles: App\Domain\Card\Command\DeleteCardCommand }
-    App\Domain\Card\Command\UpdateCardHandler:
-        public: true
-        class: App\Domain\Card\Command\UpdateCardHandler
-        arguments:
-            $repository: '@App\Infrastructure\Card\WrapperRepository'
-        tags:
-            - { name: command_handler, handles: App\Domain\Card\Command\UpdateCardCommand }
+            $repository: '@App\Infrastructure\Deck\WrapperRepository'
 
+    #Command handlers
+    card_command_handlers:
+        namespace: App\Domain\Card\Command\
+        resource: '../src/Domain/Card/Command/*Handler.php'
+        autoconfigure: false
+        arguments:
+            $repository: '@App\Infrastructure\Card\WrapperRepository'
+    deck_command_handlers:
+        namespace: App\Domain\Deck\Command\
+        resource: '../src/Domain/Deck/Command/*Handler.php'
+        autoconfigure: false
+        arguments:
+            $repository: '@App\Infrastructure\Deck\WrapperRepository'
+            $cardRepository: '@App\Infrastructure\Card\CardRepository'
     App\Domain\Deck\Command\AddDeckHandler:
         public: true
         class: App\Domain\Deck\Command\AddDeckHandler
         arguments:
             $repository: '@App\Infrastructure\Deck\WrapperRepository'
         tags:
-            - { name: command_handler, handles: App\Domain\Deck\Command\AddDeckCommand }
-    App\Domain\Deck\Command\AddDeckCardHandler:
-        public: true
-        class: App\Domain\Deck\Command\AddDeckCardHandler
-        arguments:
-            $repository: '@App\Infrastructure\Deck\WrapperRepository'
-            $cardRepository: '@App\Infrastructure\Card\CardRepository'
-        tags:
-            - { name: command_handler, handles: App\Domain\Deck\Command\AddDeckCardCommand }
-    App\Domain\Deck\Command\DeleteDeckCardHandler:
-        public: true
-        class: App\Domain\Deck\Command\DeleteDeckCardHandler
-        arguments:
-            $repository: '@App\Infrastructure\Deck\WrapperRepository'
-            $cardRepository: '@App\Infrastructure\Card\CardRepository'
-        tags:
-            - { name: command_handler, handles: App\Domain\Deck\Command\DeleteDeckCardCommand }
-    App\Domain\Deck\Command\DeleteDeckHandler:
-        public: true
-        class: App\Domain\Deck\Command\DeleteDeckHandler
-        arguments:
-            $repository: '@App\Infrastructure\Deck\WrapperRepository'
-            $cardRepository: '@App\Infrastructure\Card\CardRepository'
-        tags:
-            - { name: command_handler, handles: App\Domain\Deck\Command\DeleteDeckCommand }
-
-    #Query Handlers
-    App\Domain\Card\Query\GetCardHandler:
-        public: true
-        class: App\Domain\Card\Query\GetCardHandler
-        arguments:
-            $repository: '@App\Infrastructure\Card\WrapperRepository'
-        tags:
-            - { name: command_handler, bus: query.bus, handles: App\Domain\Card\Query\GetCardQuery }
-    App\Domain\Card\Query\GetCardListHandler:
-        public: true
-        class: App\Domain\Card\Query\GetCardListHandler
-        arguments:
-            $repository: '@App\Infrastructure\Card\WrapperRepository'
-            $paginationService: '@App\Domain\Card\PaginationService'
-        tags:
-            - { name: command_handler, bus: query.bus, handles: App\Domain\Card\Query\GetCardListQuery }
-    App\Domain\Deck\Query\GetDeckHandler:
-        public: true
-        class: App\Domain\Deck\Query\GetDeckHandler
-        arguments:
-            $repository: '@App\Infrastructure\Deck\WrapperRepository'
-        tags:
-            - { name: command_handler, bus: query.bus, handles: App\Domain\Deck\Query\GetDeckQuery }
+            - { name: messenger.message_handler, handles: App\Domain\Deck\Command\DeleteDeckCommand }

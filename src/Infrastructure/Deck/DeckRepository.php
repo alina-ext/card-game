@@ -23,15 +23,16 @@ class DeckRepository extends ServiceEntityRepository implements DeckRepositoryIn
 		parent::__construct($registry, Deck::class);
 	}
 
-	public function save(DeckModel $deck): Deck
+	/**
+	 * {@inheritDoc}
+	 */
+	public function save(DeckModel $deck): void
 	{
 		$em = $this->getEntityManager();
 		if ($deck->isDeleted()) {
 			$this->deckCardRepository->deleteInDeck($deck->getId(), $deck->getCards());
 			$deckEntity = $this->find($deck->getId());
 			$em->remove($deckEntity);
-
-			return $deckEntity;
 		}
 		$entity = new Deck();
 		$entity
@@ -42,10 +43,11 @@ class DeckRepository extends ServiceEntityRepository implements DeckRepositoryIn
 		} catch (Exception $e) {
 			throw new DBException($e->getMessage(), $e->getCode(), $e);
 		}
-
-		return $entity;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function saveCard(DeckModel $deck): void
 	{
 		$deckCurrentState = $this->getById($deck->getId());
@@ -69,6 +71,9 @@ class DeckRepository extends ServiceEntityRepository implements DeckRepositoryIn
 		$this->deckCardRepository->updateInDeck($deck->getId(), $cardsToUpdate);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getById(string $id): DeckModel
 	{
 		if (($deck = $this->find($id)) === null) {

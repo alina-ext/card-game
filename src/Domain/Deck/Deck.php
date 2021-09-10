@@ -28,12 +28,7 @@ class Deck
 		$this->id = $id;
 		$this->userId = $userId;
 		$this->events = [];
-		$this->cards = [];
-		if ($cards) {
-			foreach ($cards as $card) {
-				$this->cards[$card->getCardId()] = new Card($card->getCardId(), $card->getTitle(), $card->getPower(), $card->getAmount());
-			}
-		}
+		$this->cards = $cards;
 	}
 
 	public function addCard(Card $card): void
