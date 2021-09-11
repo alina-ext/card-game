@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Deck\Query;
 
-use App\Domain\Deck\DeckRepositoryInterface;
+use App\Domain\Deck\DeckRepository;
 use App\Domain\Deck\Response;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 use App\Infrastructure\Common\Query\QueryHandler;
@@ -11,13 +11,13 @@ use App\Infrastructure\ValidatorInterface;
 
 class GetDeckHandler implements QueryHandler
 {
-	private DeckRepositoryInterface $repository;
+	private DeckRepository $repository;
 	private ValidatorInterface $validator;
 	private GeneratorInterface $uuidGenerator;
 
 	public function __construct(
 		ValidatorInterface $validator,
-		DeckRepositoryInterface $repository,
+		DeckRepository $repository,
 		GeneratorInterface $uuidGenerator
 	)
 	{

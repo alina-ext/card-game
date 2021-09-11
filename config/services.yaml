@@ -18,6 +18,9 @@ services:
     App\Infrastructure\Common\Query\QueryBus:
         class: App\Infrastructure\Common\Query\MessengerQueryBus
 
+    App\Infrastructure\Common\Event\EventBus:
+        class: App\Infrastructure\Common\Event\MessengerEventBus
+
     api_exception_subscriber:
         class: App\Infrastructure\ApiExceptionSubscriber
         arguments: [ ]
@@ -29,8 +32,6 @@ services:
         arguments:
             $name: 'monolog'
 
-    App\Infrastructure\Common\Event\Publisher: ~
-    App\Infrastructure\Common\Event\Subscriber: ~
     App\Domain\Card\PaginationService: ~
 
     #Controllers
@@ -38,30 +39,14 @@ services:
     App\Application\Deck\DeckController: ~
 
     #Repositories
-    App\Infrastructure\Common\Event\EventRepository:
-        class: App\Infrastructure\Common\Event\EventRepository
-    App\Infrastructure\Card\CardRepository:
-        class: App\Infrastructure\Card\CardRepository
-    App\Infrastructure\Card\WrapperRepository:
-        class: App\Infrastructure\Card\WrapperRepository
-        arguments:
-            $cardRepository: '@App\Infrastructure\Card\CardRepository'
-            $eventRepository: '@App\Infrastructure\Common\Event\EventRepository'
-            $publisher: '@App\Infrastructure\Common\Event\Publisher'
-    App\Infrastructure\Deck\DeckRepository:
-        class: App\Infrastructure\Deck\DeckRepository
-        arguments:
-            $deckCardRepository: '@App\Infrastructure\Deck\Card\DeckCardRepository'
-    App\Infrastructure\Deck\WrapperRepository:
-        class: App\Infrastructure\Deck\WrapperRepository
-        arguments:
-            $deckRepository: '@App\Infrastructure\Deck\DeckRepository'
-            $eventRepository: '@App\Infrastructure\Common\Event\EventRepository'
-            $publisher: '@App\Infrastructure\Common\Event\Publisher'
-    App\Infrastructure\Deck\Card\DeckCardRepository:
-        class: App\Infrastructure\Deck\Card\DeckCardRepository
-        arguments:
-            $cardRepository: '@App\Infrastructure\Card\CardRepository'
+    App\Infrastructure\Common\EventRepository:
+        class: App\Infrastructure\Repository\EventRepository
+    App\Domain\Card\CardRepository:
+        class: App\Infrastructure\Repository\CardRepository
+    App\Domain\Deck\DeckRepository:
+        class: App\Infrastructure\Repository\DeckRepository
+    App\Domain\Deck\Card\DeckCardRepository:
+        class: App\Infrastructure\Repository\DeckCardRepository
 
     #Validators
     App\Infrastructure\ValidatorInterface:
@@ -78,37 +63,32 @@ services:
         App\Infrastructure\Common\Query\QueryHandler:
             tags:
                 - { name: messenger.message_handler, bus: query.bus }
+        App\Infrastructure\Common\Event\EventHandler:
+            tags:
+                - { name: messenger.message_handler, bus: event.bus }
 
     #Query handlers
     card_query_handlers:
         namespace: App\Domain\Card\Query\
         resource: '../src/Domain/Card/Query/*Handler.php'
         autoconfigure: false
-        arguments:
-            $repository: '@App\Infrastructure\Card\WrapperRepository'
     deck_query_handlers:
         namespace: App\Domain\Deck\Query\
         resource: '../src/Domain/Deck/Query/*Handler.php'
         autoconfigure: false
-        arguments:
-            $repository: '@App\Infrastructure\Deck\WrapperRepository'
 
     #Command handlers
     card_command_handlers:
         namespace: App\Domain\Card\Command\
         resource: '../src/Domain/Card/Command/*Handler.php'
         autoconfigure: false
-        arguments:
-            $repository: '@App\Infrastructure\Card\WrapperRepository'
     deck_command_handlers:
         namespace: App\Domain\Deck\Command\
         resource: '../src/Domain/Deck/Command/*Handler.php'
         autoconfigure: false
-        arguments:
-            $repository: '@App\Infrastructure\Deck\WrapperRepository'
-            $cardRepository: '@App\Infrastructure\Card\CardRepository'
-    App\Domain\Deck\Command\AddDeckHandler:
-        public: true
-        class: App\Domain\Deck\Command\AddDeckHandler
-        arguments:
-            $repository: '@App\Infrastructure\Deck\WrapperRepository'
+
+    #Event handlers
+    deck_card_event_handlers:
+        namespace: App\Domain\Deck\Event\
+        resource: '../src/Domain/Deck/Event/*Handler.php'
+        autoconfigure: false

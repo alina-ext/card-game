@@ -5,7 +5,7 @@ namespace App\Domain\Deck;
 
 use App\Domain\Deck\Deck as DeckModel;
 
-interface DeckRepositoryInterface
+interface DeckRepository
 {
 	/**
 	 * @param DeckModel $deck

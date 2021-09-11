@@ -7,7 +7,12 @@ use App\Domain\Card\Exceptions\BadCommand;
 use App\Domain\Card\Exceptions\ConflictException;
 use App\Domain\Card\Exceptions\DBException;
 use App\Domain\Card\Exceptions\NotFoundException;
-use App\Domain\Card\Exceptions\ValidationException;
+use App\Domain\Card\Exceptions\ValidationException AS CardValidationException;
+use App\Domain\Deck\Exceptions\DBException AS DeckDBException;
+use App\Domain\Deck\Exceptions\DeckSizeLimitReachedException;
+use App\Domain\Deck\Exceptions\NotEnoughCards;
+use App\Domain\Deck\Exceptions\NotFoundException AS DeckNotFoundException;
+use App\Domain\Deck\Exceptions\ValidationException AS DeckValidationException;
 use App\Infrastructure\Common\Generator\GeneratorException;
 use Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -25,17 +30,27 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
 		if ($e instanceof HandlerFailedException) {
 			$e = $e->getPrevious();
 		}
-		if ($e instanceof ValidationException || $e instanceof ConflictException) {
+		if ($e instanceof ValidationException ||
+			$e instanceof CardValidationException ||
+			$e instanceof ConflictException ||
+			$e instanceof DeckSizeLimitReachedException ||
+			$e instanceof NotEnoughCards ||
+			$e instanceof DeckValidationException
+		) {
 			$event->setResponse(ResponseJson::render(Response::HTTP_BAD_REQUEST, $e->getMessage()));
 
 			return;
 		}
-		if ($e instanceof NotFoundException) {
+		if ($e instanceof NotFoundException || $e instanceof DeckNotFoundException) {
 			$event->setResponse(ResponseJson::render(Response::HTTP_NOT_FOUND, $e->getMessage()));
 
 			return;
 		}
-		if ($e instanceof DBException || $e instanceof BadCommand || $e instanceof GeneratorException || $e instanceof Exception) {
+		if ($e instanceof DBException ||
+			$e instanceof DeckDBException ||
+			$e instanceof BadCommand ||
+			$e instanceof GeneratorException ||
+			$e instanceof Exception) {
 			$event->setResponse(ResponseJson::render(Response::HTTP_BAD_GATEWAY, $e->getMessage()));
 
 			return;

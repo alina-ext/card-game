@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Query;
 
-use App\Domain\Card\CardRepositoryInterface;
+use App\Domain\Card\CardRepository;
 use App\Domain\Card\PaginationService;
 use App\Domain\Card\ResponseCatalog;
 use App\Infrastructure\Card\FilterService;
@@ -12,13 +12,13 @@ use App\Infrastructure\ValidatorInterface;
 
 class GetCardListHandler implements QueryHandler
 {
-	private CardRepositoryInterface $repository;
+	private CardRepository $repository;
 	private ValidatorInterface $validator;
 	private PaginationService $paginationService;
 
 	public function __construct(
 		ValidatorInterface $validator,
-		CardRepositoryInterface $repository,
+		CardRepository $repository,
 		PaginationService $paginationService
 	) {
 		$this->validator = $validator;

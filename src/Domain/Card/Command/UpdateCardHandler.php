@@ -3,26 +3,33 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Command;
 
-use App\Domain\Card\CardRepositoryInterface;
+use App\Domain\Card\CardRepository;
 use App\Infrastructure\Common\Command\CommandHandler;
+use App\Infrastructure\Common\Event\EventBus;
+use App\Infrastructure\Common\EventRepository;
 use App\Infrastructure\ValidatorInterface;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 
 class UpdateCardHandler implements CommandHandler
 {
-	private CardRepositoryInterface $repository;
+	private CardRepository $repository;
 	private ValidatorInterface $validator;
 	private GeneratorInterface $uuidGenerator;
+	private EventRepository $eventRepository;
+	private EventBus $eventBus;
 
 	public function __construct(
+		CardRepository $repository,
 		ValidatorInterface $validator,
-		CardRepositoryInterface $repository,
-		GeneratorInterface $uuidGenerator
-	)
+		GeneratorInterface $uuidGenerator,
+		EventRepository $eventRepository,
+		EventBus $eventBus)
 	{
-		$this->validator = $validator;
 		$this->repository = $repository;
+		$this->validator = $validator;
 		$this->uuidGenerator = $uuidGenerator;
+		$this->eventRepository = $eventRepository;
+		$this->eventBus = $eventBus;
 	}
 
 	public function __invoke(UpdateCardCommand $command): void
@@ -35,14 +42,13 @@ class UpdateCardHandler implements CommandHandler
 		);
 		if (null !== ($title = $dto->getTitle())) {
 			$model->setTitle($title);
-			$model->pushEvent('card:update:title');
 		}
 		if (null !== ($power = $dto->getPower())) {
 			$model->setPower(intval($power));
-			$model->pushEvent('card:update:power');
 		}
 
 		$this->repository->save($model);
+		$model->dispatch($this->eventRepository, $this->eventBus);
 	}
 
 	public static function getHandledMessages(): iterable

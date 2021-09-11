@@ -1,23 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Deck;
+namespace App\Infrastructure\Repository;
 
 use App\Domain\Card\Exceptions\NotFoundException;
-use App\Domain\Deck\Card\DeckCardRepositoryInterface;
+use App\Domain\Deck\Card\DeckCardRepository;
 use App\Domain\Deck\Exceptions\DBException;
-use App\Domain\Deck\DeckRepositoryInterface;
+use App\Domain\Deck\DeckRepository AS IDeckRepository;
 use App\Entity\Deck;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use App\Domain\Deck\Deck as DeckModel;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 
-class DeckRepository extends ServiceEntityRepository implements DeckRepositoryInterface
+class DeckRepository extends ServiceEntityRepository implements IDeckRepository
 {
-	private DeckCardRepositoryInterface $deckCardRepository;
+	private DeckCardRepository $deckCardRepository;
 
-	public function __construct(ManagerRegistry $registry, DeckCardRepositoryInterface $deckCardRepository)
+	public function __construct(ManagerRegistry $registry, DeckCardRepository $deckCardRepository)
 	{
 		$this->deckCardRepository = $deckCardRepository;
 		parent::__construct($registry, Deck::class);

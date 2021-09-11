@@ -6,7 +6,7 @@ namespace App\Domain\Card;
 use App\Domain\Card\Card AS CardModel;
 use App\Infrastructure\Card\FilterService;
 
-interface CardRepositoryInterface
+interface CardRepository
 {
 	/**
 	 * @param CardModel $card

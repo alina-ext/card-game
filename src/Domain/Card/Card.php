@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace App\Domain\Card;
 
-use App\Entity\Event;
-use DateTime;
+use App\Domain\Card\Event\Event;
+use App\Infrastructure\Common\Event\Event as DomainEvent;
+use App\Infrastructure\Common\Event\EventBus;
+use App\Infrastructure\Common\EventRepository;
 
 class Card
 {
@@ -12,7 +14,7 @@ class Card
 	private string $title;
 	private int $power;
 	private bool $deleted;
-	/** @var Event[] */
+	/** @var DomainEvent[] */
 	private array $events;
 
 	public function __construct(string $id, string $title, int $power, bool $deleted = false)
@@ -22,6 +24,11 @@ class Card
 		$this->power = $power;
 		$this->deleted = $deleted;
 		$this->events = [];
+		if ($deleted) {
+			$this->pushEvent('card:delete');
+		} else {
+			$this->pushEvent('card:add');
+		}
 	}
 
 	public function getId(): string
@@ -37,6 +44,7 @@ class Card
 	public function setTitle(string $title): void
 	{
 		$this->title = $title;
+		$this->pushEvent('card:update:title');
 	}
 
 	public function getPower(): int
@@ -47,6 +55,7 @@ class Card
 	public function setPower(int $power): void
 	{
 		$this->power = $power;
+		$this->pushEvent('card:update:power');
 	}
 
 	public function isDeleted(): bool
@@ -54,24 +63,15 @@ class Card
 		return $this->deleted;
 	}
 
-	public function pushEvent(string $eventTitle): void
+	private function pushEvent(string $eventTitle): void
 	{
-		$event = new Event();
-		$event->setTitle($eventTitle);
-		$event->setData(json_encode($this->getCard()));
-		$event->setTm(new DateTime());
+		$event = new Event($eventTitle);
+		$event->setCardId($this->id);
+		$event->setCardTitle($this->title);
+		$event->setCardPower($this->power);
 		$this->events[] = $event;
 	}
 
-	public function getEvents(): array
-	{
-		return $this->events;
-	}
-
-	public function deleteEvents(): void
-	{
-		$this->events = [];
-	}
 	public function getCard()
 	{
 		return [
@@ -86,5 +86,13 @@ class Card
 		$response->setId($this->id);
 		$response->setTitle($this->title);
 		$response->setPower($this->power);
+	}
+
+	public function dispatch(EventRepository $eventRepository, EventBus $eventBus) {
+		foreach ($this->events as $event) {
+			$eventRepository->save($event);
+			$eventBus->dispatch($event);
+		}
+		$this->events = [];
 	}
 }

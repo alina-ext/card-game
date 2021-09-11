@@ -3,26 +3,34 @@ declare(strict_types=1);
 
 namespace App\Domain\Card\Command;
 
-use App\Domain\Card\CardRepositoryInterface;
+use App\Domain\Card\CardRepository;
 use App\Infrastructure\Common\Command\CommandHandler;
+use App\Infrastructure\Common\Event\EventBus;
+use App\Infrastructure\Common\EventRepository;
 use App\Infrastructure\ValidatorInterface;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 use App\Domain\Card\Card;
 
 class AddCardHandler implements CommandHandler
 {
-	private CardRepositoryInterface $repository;
+	private CardRepository $repository;
 	private ValidatorInterface $validator;
 	private GeneratorInterface $uuidGenerator;
+	private EventRepository $eventRepository;
+	private EventBus $eventBus;
 
 	public function __construct(
+		CardRepository $repository,
 		ValidatorInterface $validator,
-		CardRepositoryInterface $repository,
-		GeneratorInterface $uuidGenerator
-	) {
-		$this->validator = $validator;
+		GeneratorInterface $uuidGenerator,
+		EventRepository $eventRepository,
+		EventBus $eventBus)
+	{
 		$this->repository = $repository;
+		$this->validator = $validator;
 		$this->uuidGenerator = $uuidGenerator;
+		$this->eventRepository = $eventRepository;
+		$this->eventBus = $eventBus;
 	}
 
 	public function __invoke(AddCardCommand $command): void
@@ -35,15 +43,8 @@ class AddCardHandler implements CommandHandler
 			$dto->getTitle(),
 			$dto->getPower()
 		);
-		$model->pushEvent('card:add');
 
 		$this->repository->save($model);
-	}
-
-	public static function getHandledMessages(): iterable
-	{
-		yield AddCardCommand::class => [
-			'method' => '__invoke'
-		];
+		$model->dispatch($this->eventRepository, $this->eventBus);
 	}
 }

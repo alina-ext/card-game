@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Deck\Card;
 
-use App\Domain\Deck\Card\Card;
-
-interface DeckCardRepositoryInterface
+interface DeckCardRepository
 {
 	/**
 	 * @param string $deckId

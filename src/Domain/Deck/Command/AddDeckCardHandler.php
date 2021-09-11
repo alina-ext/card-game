@@ -3,30 +3,38 @@ declare(strict_types=1);
 
 namespace App\Domain\Deck\Command;
 
-use App\Domain\Card\CardRepositoryInterface;
+use App\Domain\Card\CardRepository;
 use App\Domain\Deck\Card\Card;
-use App\Domain\Deck\DeckRepositoryInterface;
+use App\Domain\Deck\DeckRepository;
 use App\Infrastructure\Common\Command\CommandHandler;
+use App\Infrastructure\Common\Event\EventBus;
+use App\Infrastructure\Common\EventRepository;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 use App\Infrastructure\ValidatorInterface;
 
 class AddDeckCardHandler implements CommandHandler
 {
-	private DeckRepositoryInterface $repository;
-	private CardRepositoryInterface $cardRepository;
+	private DeckRepository $repository;
+	private CardRepository $cardRepository;
 	private ValidatorInterface $validator;
 	private GeneratorInterface $uuidGenerator;
+	private EventRepository $eventRepository;
+	private EventBus $eventBus;
 
 	public function __construct(
+		DeckRepository $repository,
+		CardRepository $cardRepository,
 		ValidatorInterface $validator,
-		DeckRepositoryInterface $repository,
-		CardRepositoryInterface $cardRepository,
-		GeneratorInterface $uuidGenerator
-	) {
-		$this->validator = $validator;
+		GeneratorInterface $uuidGenerator,
+		EventRepository $eventRepository,
+		EventBus $eventBus)
+	{
 		$this->repository = $repository;
 		$this->cardRepository = $cardRepository;
+		$this->validator = $validator;
 		$this->uuidGenerator = $uuidGenerator;
+		$this->eventRepository = $eventRepository;
+		$this->eventBus = $eventBus;
 	}
 
 	public function __invoke(AddDeckCardCommand $command): void
@@ -40,15 +48,8 @@ class AddDeckCardHandler implements CommandHandler
 		$cardDto = new Card($cardModel->getId(), $cardModel->getTitle(), $cardModel->getPower(), $dto->getAmount());
 
 		$deckModel->addCard($cardDto);
-		$deckModel->pushEvent('deck:card:add');
 
 		$this->repository->saveCard($deckModel);
-	}
-
-	public static function getHandledMessages(): iterable
-	{
-		yield AddDeckCardCommand::class => [
-			'method' => '__invoke'
-		];
+		$deckModel->dispatch($this->eventRepository, $this->eventBus);
 	}
 }

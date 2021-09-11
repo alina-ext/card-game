@@ -6,8 +6,11 @@ namespace App\Domain\Deck;
 use App\Domain\Deck\Card\Card;
 use App\Domain\Deck\Exceptions\DeckSizeLimitReachedException;
 use App\Domain\Deck\Exceptions\NotEnoughCards;
-use App\Entity\Event;
-use DateTime;
+use App\Domain\Deck\Event\Event AS DeckEvent;
+use App\Domain\Deck\Card\Event\Event AS DeckCardEvent;
+use App\Infrastructure\Common\Event\Event as DomainEvent;
+use App\Infrastructure\Common\Event\EventBus;
+use App\Infrastructure\Common\EventRepository;
 use App\Domain\Deck\Card\Response AS CardResponse;
 
 class Deck
@@ -18,17 +21,37 @@ class Deck
 	private string $id;
 	private string $userId;
 	private bool $deleted = false;
-	/** @var Event[] */
+	/** @var DomainEvent[] */
 	private array $events;
 	/** @var Card[] */
 	private array $cards;
 
-	public function __construct(string $id, string $userId, array $cards = [])
+	public function __construct(string $id, string $userId, array $cards = [], bool $addEvent = false)
 	{
 		$this->id = $id;
 		$this->userId = $userId;
 		$this->events = [];
 		$this->cards = $cards;
+		if ($addEvent) {
+			$this->pushDeckEvent('deck:add');
+		}
+	}
+
+	private function pushDeckEvent(string $title) {
+		$event = new DeckEvent($title);
+		$event->setDeckId($this->id);
+		$event->setUserId($this->userId);
+		$this->events[] = $event;
+	}
+
+	private function pushDeckCardEvent(string $title, Card $card) {
+		$event = new DeckCardEvent($title);
+		$event->setDeckId($this->id);
+		$event->setCardId($card->getId());
+		$event->setCardTitle($card->getTitle());
+		$event->setCardPower($card->getPower());
+		$event->setCardAmount($card->getAmount());
+		$this->events[] = $event;
 	}
 
 	public function addCard(Card $card): void
@@ -38,11 +61,12 @@ class Deck
 		}
 
 		if (array_key_exists($card->getId(), $this->cards)) {
-			$card = $this->cards[$card->getId()];
-			$card->setAmount($card->getAmount() + $card->getAmount());
+			$cardExisted = $this->cards[$card->getId()];
+			$cardExisted->setAmount($card->getAmount() + $cardExisted->getAmount());
 		} else {
 			$this->cards[$card->getId()] = $card;
 		}
+		$this->pushDeckCardEvent('deck:card:add', $card);
 	}
 
 	public function deleteCards(string $cardId, int $amount): void
@@ -54,7 +78,12 @@ class Deck
 				throw new NotEnoughCards(sprintf('Not enough card %s in deck to delete', $cardId));
 			} else if (!$newAmount) {
 				unset($this->cards[$cardId]);
+				$this->pushDeckCardEvent('deck:card:delete', $card);
 			} else {
+				//only for correct event amount
+				$card->setAmount($amount);
+				$this->pushDeckCardEvent('deck:card:delete', $card);
+
 				$card->setAmount($newAmount);
 			}
 		} else {
@@ -77,12 +106,15 @@ class Deck
 			return $uniqAmount + $card->getAmount() <= self::DECK_CARD_LIMIT;
 		}
 
-		return $this->getTotalCardsAmount() < self::DECK_SIZE_LIMIT;
+		return $this->getTotalCardsAmount() + $card->getAmount() <= self::DECK_SIZE_LIMIT;
 	}
 
 	private function getTotalCardsAmount(): int
 	{
-		return count($this->cards);
+		return array_reduce($this->cards, function ($acc, $card) {
+			$acc += $card->getAmount();
+			return $acc;
+		}, 0);
 	}
 
 	private function getUniqueCardAmount(string $id): int
@@ -98,25 +130,6 @@ class Deck
 	public function getUserId(): string
 	{
 		return $this->userId;
-	}
-
-	public function pushEvent(string $eventTitle)
-	{
-		$event = new Event();
-		$event->setTitle($eventTitle);
-		$event->setData(json_encode($this->getDeck()));
-		$event->setTm(new DateTime());
-		$this->events[] = $event;
-	}
-
-	public function getEvents(): array
-	{
-		return $this->events;
-	}
-
-	public function deleteEvents(): void
-	{
-		$this->events = [];
 	}
 
 	public function getDeck()
@@ -138,6 +151,16 @@ class Deck
 		return $result;
 	}
 
+	public function dispatch(EventRepository $eventRepository, EventBus $eventBus) {
+		foreach ($this->events as $event) {
+			$eventRepository->save($event);
+			if (in_array($event->getTitle(), ['deck:card:add', 'deck:card:delete', 'deck:delete'])) {
+				$eventBus->dispatch($event);
+			}
+		}
+		$this->events = [];
+	}
+
 	public function fillResponse(Response $response): void
 	{
 		$response->setId($this->id);
@@ -155,6 +178,12 @@ class Deck
 	public function setDeleted(): void
 	{
 		$this->deleted = true;
+		if ($this->cards) {
+			foreach ($this->cards as $card) {
+				$this->pushDeckCardEvent('deck:card:delete', $card);
+			}
+		}
+		$this->pushDeckEvent('deck:delete');
 	}
 
 	public function isDeleted(): bool

@@ -1,13 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Card;
+namespace App\Infrastructure\Repository;
 
 use App\Domain\Card\CardCollection;
-use App\Domain\Card\CardRepositoryInterface;
+use App\Domain\Card\CardRepository AS ICardRepository;
 use App\Domain\Card\Exceptions\ConflictException;
 use App\Domain\Card\Exceptions\DBException;
 use App\Entity\Card;
+use App\Infrastructure\Card\FilterService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,7 +16,7 @@ use Exception;
 use App\Domain\Card\Exceptions\NotFoundException;
 use App\Domain\Card\Card as CardModel;
 
-class CardRepository extends ServiceEntityRepository implements CardRepositoryInterface
+class CardRepository extends ServiceEntityRepository implements ICardRepository
 {
 	public function __construct(ManagerRegistry $registry)
 	{

@@ -4,25 +4,33 @@ declare(strict_types=1);
 namespace App\Domain\Deck\Command;
 
 use App\Domain\Deck\Deck;
-use App\Domain\Deck\DeckRepositoryInterface;
+use App\Domain\Deck\DeckRepository;
 use App\Infrastructure\Common\Command\CommandHandler;
+use App\Infrastructure\Common\Event\EventBus;
+use App\Infrastructure\Common\EventRepository;
 use App\Infrastructure\Common\Generator\GeneratorInterface;
 use App\Infrastructure\ValidatorInterface;
 
 class AddDeckHandler implements CommandHandler
 {
-	private DeckRepositoryInterface $repository;
+	private DeckRepository $repository;
 	private ValidatorInterface $validator;
 	private GeneratorInterface $uuidGenerator;
+	private EventRepository $eventRepository;
+	private EventBus $eventBus;
 
 	public function __construct(
+		DeckRepository $repository,
 		ValidatorInterface $validator,
-		DeckRepositoryInterface $repository,
-		GeneratorInterface $uuidGenerator
-	) {
-		$this->validator = $validator;
+		GeneratorInterface $uuidGenerator,
+		EventRepository $eventRepository,
+		EventBus $eventBus)
+	{
 		$this->repository = $repository;
+		$this->validator = $validator;
 		$this->uuidGenerator = $uuidGenerator;
+		$this->eventRepository = $eventRepository;
+		$this->eventBus = $eventBus;
 	}
 
 	public function __invoke(AddDeckCommand $command): void
@@ -32,17 +40,12 @@ class AddDeckHandler implements CommandHandler
 
 		$model = new Deck(
 			$this->uuidGenerator->toString($dto->getId()),
-			$this->uuidGenerator->toString($dto->getUserId())
+			$this->uuidGenerator->toString($dto->getUserId()),
+			[],
+			true
 		);
-		$model->pushEvent('deck:add');
 
 		$this->repository->save($model);
-	}
-
-	public static function getHandledMessages(): iterable
-	{
-		yield AddDeckCommand::class => [
-			'method' => '__invoke'
-		];
+		$model->dispatch($this->eventRepository, $this->eventBus);
 	}
 }
