@@ -88,7 +88,8 @@ class Card
 		$response->setPower($this->power);
 	}
 
-	public function dispatch(EventRepository $eventRepository, EventBus $eventBus) {
+	public function dispatch(EventRepository $eventRepository, EventBus $eventBus)
+	{
 		foreach ($this->events as $event) {
 			$eventRepository->save($event);
 			$eventBus->dispatch($event);

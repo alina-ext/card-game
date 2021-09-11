@@ -9,7 +9,15 @@ interface GeneratorInterface
 {
 	public function generate(): Uuid;
 
+	/**
+	 * @param Uuid $id
+	 * @return string
+	 */
 	public function toString(Uuid $id): string;
 
+	/**
+	 * @param string $id
+	 * @return Uuid
+	 */
 	public function fromString(string $id): Uuid;
 }

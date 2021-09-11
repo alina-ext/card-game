@@ -5,4 +5,5 @@ namespace App\Infrastructure\Common\Event;
 
 interface EventHandler
 {
+
 }

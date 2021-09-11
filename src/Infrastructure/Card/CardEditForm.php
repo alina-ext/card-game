@@ -17,9 +17,8 @@ class CardEditForm extends AbstractType
 	{
 		$builder
 			->add('id', UuidType::class)
-			->add('title', TextType::class, ['required' => false, 'empty_data'  => null])
-			->add('power', IntegerType::class, ['required' => false, 'empty_data'  => null])
-		;
+			->add('title', TextType::class, ['required' => false, 'empty_data' => null])
+			->add('power', IntegerType::class, ['required' => false, 'empty_data' => null]);
 	}
 
 	final public function configureOptions(OptionsResolver $resolver): void

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Card;
 
-use App\Domain\Card\Card AS CardModel;
+use App\Domain\Card\Card as CardModel;
 use App\Infrastructure\Card\FilterService;
 
 interface CardRepository

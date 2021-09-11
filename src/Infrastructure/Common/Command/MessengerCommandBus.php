@@ -14,6 +14,9 @@ class MessengerCommandBus implements CommandBus
 		$this->commandBus = $commandBus;
 	}
 
+	/**
+	 * @param Command $command
+	 */
 	public function dispatch(Command $command): void
 	{
 		$this->commandBus->dispatch($command);

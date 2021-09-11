@@ -6,12 +6,12 @@ namespace App\Domain\Deck;
 use App\Domain\Deck\Card\Card;
 use App\Domain\Deck\Exceptions\DeckSizeLimitReachedException;
 use App\Domain\Deck\Exceptions\NotEnoughCards;
-use App\Domain\Deck\Event\Event AS DeckEvent;
-use App\Domain\Deck\Card\Event\Event AS DeckCardEvent;
+use App\Domain\Deck\Event\Event as DeckEvent;
+use App\Domain\Deck\Card\Event\Event as DeckCardEvent;
 use App\Infrastructure\Common\Event\Event as DomainEvent;
 use App\Infrastructure\Common\Event\EventBus;
 use App\Infrastructure\Common\EventRepository;
-use App\Domain\Deck\Card\Response AS CardResponse;
+use App\Domain\Deck\Card\Response as CardResponse;
 
 class Deck
 {
@@ -37,14 +37,16 @@ class Deck
 		}
 	}
 
-	private function pushDeckEvent(string $title) {
+	private function pushDeckEvent(string $title)
+	{
 		$event = new DeckEvent($title);
 		$event->setDeckId($this->id);
 		$event->setUserId($this->userId);
 		$this->events[] = $event;
 	}
 
-	private function pushDeckCardEvent(string $title, Card $card) {
+	private function pushDeckCardEvent(string $title, Card $card)
+	{
 		$event = new DeckCardEvent($title);
 		$event->setDeckId($this->id);
 		$event->setCardId($card->getId());
@@ -151,7 +153,8 @@ class Deck
 		return $result;
 	}
 
-	public function dispatch(EventRepository $eventRepository, EventBus $eventBus) {
+	public function dispatch(EventRepository $eventRepository, EventBus $eventBus)
+	{
 		foreach ($this->events as $event) {
 			$eventRepository->save($event);
 			if (in_array($event->getTitle(), ['deck:card:add', 'deck:card:delete', 'deck:delete'])) {

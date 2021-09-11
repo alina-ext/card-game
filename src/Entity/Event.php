@@ -5,7 +5,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use App\Infrastructure\Common\Event\EventRepository;
+use App\Infrastructure\Repository\EventRepository;
 
 /**
  * @ORM\Entity(repositoryClass=EventRepository::class)
@@ -51,6 +51,7 @@ class Event
 
 		return $this;
 	}
+
 	public function getData(): string
 	{
 		return $this->title;

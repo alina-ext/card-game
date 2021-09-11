@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Infrastructure\Card\CardRepository;
+use App\Infrastructure\Repository\CardRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,17 +16,17 @@ class Card
 	 * @ORM\Id
 	 * @ORM\Column(type="string", length=36, unique=true, nullable=false)
 	 */
-    private string $id;
+	private string $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, unique=true, nullable=false)
-     */
-    private string $title;
+	/**
+	 * @ORM\Column(type="string", length=255, unique=true, nullable=false)
+	 */
+	private string $title;
 
-    /**
-     * @ORM\Column(type="smallint", columnDefinition="unsigned", nullable=false)
-     */
-    private int $power;
+	/**
+	 * @ORM\Column(type="smallint", columnDefinition="unsigned", nullable=false)
+	 */
+	private int $power;
 
 	public function getId(): string
 	{
@@ -40,27 +40,27 @@ class Card
 		return $this;
 	}
 
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
+	public function getTitle(): string
+	{
+		return $this->title;
+	}
 
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
+	public function setTitle(string $title): self
+	{
+		$this->title = $title;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function getPower(): int
-    {
-        return $this->power;
-    }
+	public function getPower(): int
+	{
+		return $this->power;
+	}
 
-    public function setPower(int $power): self
-    {
-        $this->power = $power;
+	public function setPower(int $power): self
+	{
+		$this->power = $power;
 
-        return $this;
-    }
+		return $this;
+	}
 }

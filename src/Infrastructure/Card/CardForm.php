@@ -18,8 +18,7 @@ class CardForm extends AbstractType
 		$builder
 			->add('id', UuidType::class)
 			->add('title', TextType::class)
-			->add('power', IntegerType::class)
-		;
+			->add('power', IntegerType::class);
 	}
 
 	final public function configureOptions(OptionsResolver $resolver): void

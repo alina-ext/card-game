@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Infrastructure\Deck\DeckRepository;
+use App\Infrastructure\Repository\DeckRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,15 +18,15 @@ class Deck
 	 */
 	private string $id;
 
-    /**
-     * @ORM\Column(type="string", length=36, nullable=false)
-     */
-    private string $user_id;
+	/**
+	 * @ORM\Column(type="string", length=36, nullable=false)
+	 */
+	private string $user_id;
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
+	public function getId(): string
+	{
+		return $this->id;
+	}
 
 	public function setId(string $id): self
 	{
@@ -35,15 +35,15 @@ class Deck
 		return $this;
 	}
 
-    public function getUserId(): string
-    {
-        return $this->user_id;
-    }
+	public function getUserId(): string
+	{
+		return $this->user_id;
+	}
 
-    public function setUserId(string $userId): self
-    {
-        $this->user_id = $userId;
+	public function setUserId(string $userId): self
+	{
+		$this->user_id = $userId;
 
-        return $this;
-    }
+		return $this;
+	}
 }

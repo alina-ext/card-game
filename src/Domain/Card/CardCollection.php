@@ -19,6 +19,7 @@ class CardCollection
 		}
 		$this->total = $total;
 	}
+
 	public function getTotal(): int
 	{
 		return $this->total;

@@ -13,8 +13,7 @@ class FilterForm extends AbstractType
 	final public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
 		$builder
-			->add('page_id', IntegerType::class, ['required' => false, 'empty_data'  => 1])
-		;
+			->add('page_id', IntegerType::class, ['required' => false, 'empty_data' => 1]);
 	}
 
 	final public function configureOptions(OptionsResolver $resolver): void

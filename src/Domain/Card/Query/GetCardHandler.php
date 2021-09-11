@@ -19,7 +19,8 @@ class GetCardHandler implements QueryHandler
 		ValidatorInterface $validator,
 		CardRepository $repository,
 		GeneratorInterface $uuidGenerator
-	) {
+	)
+	{
 		$this->validator = $validator;
 		$this->repository = $repository;
 		$this->uuidGenerator = $uuidGenerator;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repository;
 
 use App\Domain\Card\Exceptions\DBException;
-use App\Infrastructure\Common\EventRepository AS IEventRepository;
+use App\Infrastructure\Common\EventRepository as IEventRepository;
 use App\Entity\Event;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
-use App\Infrastructure\Common\Event\Event AS DomainEvent;
+use App\Infrastructure\Common\Event\Event as DomainEvent;
 use DateTime;
 
 class EventRepository extends ServiceEntityRepository implements IEventRepository

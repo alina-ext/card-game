@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repository;
 
 use App\Domain\Card\CardCollection;
-use App\Domain\Card\CardRepository AS ICardRepository;
+use App\Domain\Card\CardRepository as ICardRepository;
 use App\Domain\Card\Exceptions\ConflictException;
 use App\Domain\Card\Exceptions\DBException;
 use App\Entity\Card;

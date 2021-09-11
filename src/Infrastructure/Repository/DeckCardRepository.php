@@ -6,7 +6,7 @@ namespace App\Infrastructure\Repository;
 use App\Domain\Card\CardRepository;
 use App\Domain\Deck\Card\Card;
 use App\Domain\Deck\Exceptions\NotFoundException;
-use App\Domain\Deck\Card\DeckCardRepository AS IDeckCardRepository;
+use App\Domain\Deck\Card\DeckCardRepository as IDeckCardRepository;
 use App\Entity\DeckCard;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

@@ -5,5 +5,8 @@ namespace App\Infrastructure\Common\Command;
 
 interface CommandBus
 {
+	/**
+	 * @param Command $command
+	 */
 	public function dispatch(Command $command): void;
 }

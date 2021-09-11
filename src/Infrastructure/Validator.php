@@ -6,7 +6,7 @@ namespace App\Infrastructure;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use App\Infrastructure\ValidatorInterface AS VI;
+use App\Infrastructure\ValidatorInterface as VI;
 
 class Validator implements VI
 {
@@ -19,11 +19,12 @@ class Validator implements VI
 		$this->logger = $logger;
 	}
 
-	public function validate(DTOInterface|FormInterface $DTO) {
+	public function validate(DTOInterface|FormInterface $DTO)
+	{
 		$errors = $this->validator->validate($DTO);
 		if (($count = $errors->count())) {
 			$messages = [];
-			for ($i=0; $i<$count; $i++) {
+			for ($i = 0; $i < $count; $i++) {
 				$messages[] = $errors->get($i)->getMessage();
 			}
 			$message = implode(", ", $messages);

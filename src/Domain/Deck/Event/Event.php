@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Deck\Event;
 
-use App\Infrastructure\Common\Event\Event AS DomainEvent;
+use App\Infrastructure\Common\Event\Event as DomainEvent;
 
 class Event implements DomainEvent
 {
@@ -27,7 +27,8 @@ class Event implements DomainEvent
 		return $this->deckId;
 	}
 
-	public function getData(): array {
+	public function getData(): array
+	{
 		return [
 			'deckId' => $this->deckId,
 			'userId' => $this->userId

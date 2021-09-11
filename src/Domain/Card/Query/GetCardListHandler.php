@@ -20,7 +20,8 @@ class GetCardListHandler implements QueryHandler
 		ValidatorInterface $validator,
 		CardRepository $repository,
 		PaginationService $paginationService
-	) {
+	)
+	{
 		$this->validator = $validator;
 		$this->repository = $repository;
 		$this->paginationService = $paginationService;

@@ -14,6 +14,9 @@ class MessengerEventBus implements EventBus
 		$this->eventBus = $eventBus;
 	}
 
+	/**
+	 * @param Event $event
+	 */
 	public function dispatch(Event $event): void
 	{
 		$this->eventBus->dispatch($event);

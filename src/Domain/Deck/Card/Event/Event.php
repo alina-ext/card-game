@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Deck\Card\Event;
 
-use App\Infrastructure\Common\Event\Event AS DomainEvent;
+use App\Infrastructure\Common\Event\Event as DomainEvent;
 
 class Event implements DomainEvent
 {
@@ -39,7 +39,8 @@ class Event implements DomainEvent
 		return $this->cardAmount;
 	}
 
-	public function getData(): array {
+	public function getData(): array
+	{
 		return [
 			'deckId' => $this->deckId,
 			'cardId' => $this->cardId,

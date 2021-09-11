@@ -16,6 +16,7 @@ abstract class ApiController extends AbstractController
 	{
 		$this->validator = $validator;
 	}
+
 	protected function buildObject(array $data, $nameClassType)
 	{
 		$buildForm = $this->createForm($nameClassType);
