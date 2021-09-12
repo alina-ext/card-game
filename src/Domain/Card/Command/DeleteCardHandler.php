@@ -38,7 +38,7 @@ class DeleteCardHandler implements CommandHandler
 		$dto = $command->getDto();
 		$this->validator->validate($dto);
 
-		$model = new Card(
+		$model = Card::createCard(
 			$this->uuidGenerator->toString($dto->getId()),
 			'',
 			0,

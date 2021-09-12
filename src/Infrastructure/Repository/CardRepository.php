@@ -65,7 +65,7 @@ class CardRepository extends ServiceEntityRepository implements ICardRepository
 	{
 		$data = $this->findBy(['id' => $ids]);
 		return array_reduce($data, function ($acc, $entity) {
-			$acc[$entity->getId()] = new CardModel(
+			$acc[$entity->getId()] = CardModel::buildCard(
 				$entity->getId(),
 				$entity->getTitle(),
 				$entity->getPower()
@@ -83,7 +83,7 @@ class CardRepository extends ServiceEntityRepository implements ICardRepository
 			throw new NotFoundException(sprintf("No card with id %s exists", $id));
 		}
 
-		return new CardModel(
+		return CardModel::buildCard(
 			$entity->getId(),
 			$entity->getTitle(),
 			$entity->getPower()

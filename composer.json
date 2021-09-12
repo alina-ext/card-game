@@ -29,7 +29,9 @@
         "symfony/yaml": "5.3.*"
     },
     "require-dev": {
-        "php": "*"
+        "php": "^8.0",
+        "phpunit/phpunit": "^9.5",
+        "symfony/phpunit-bridge": "^5.3"
     },
     "config": {
         "optimize-autoloader": true,

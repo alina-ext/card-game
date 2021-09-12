@@ -17,18 +17,28 @@ class Card
 	/** @var DomainEvent[] */
 	private array $events;
 
-	public function __construct(string $id, string $title, int $power, bool $deleted = false)
+	private function __construct(string $id, string $title, int $power, bool $deleted = false)
 	{
 		$this->id = $id;
 		$this->title = $title;
 		$this->power = $power;
 		$this->deleted = $deleted;
 		$this->events = [];
+	}
+
+	public static  function buildCard(string $id, string $title, int $power, bool $deleted = false) {
+		return new self($id, $title, $power, $deleted);
+	}
+
+	public static function createCard(string $id, string $title, int $power, bool $deleted = false) {
+		$card = self::buildCard($id, $title, $power, $deleted);
 		if ($deleted) {
-			$this->pushEvent('card:delete');
+			$card->pushEvent('card:delete');
 		} else {
-			$this->pushEvent('card:add');
+			$card->pushEvent('card:add');
 		}
+
+		return $card;
 	}
 
 	public function getId(): string

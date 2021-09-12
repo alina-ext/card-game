@@ -15,8 +15,10 @@
 /vendor/
 
 # PHPUnit
-/app/phpunit.xml
+###> phpunit/phpunit ###
 /phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
 
 # Build data
 /build/

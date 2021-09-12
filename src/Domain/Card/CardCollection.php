@@ -15,7 +15,7 @@ class CardCollection
 	public function __construct(array $items, int $total)
 	{
 		foreach ($items as $item) {
-			$this->items[] = new Card($item->getId(), $item->getTitle(), $item->getPower());
+			$this->items[] = Card::buildCard($item->getId(), $item->getTitle(), $item->getPower());
 		}
 		$this->total = $total;
 	}
