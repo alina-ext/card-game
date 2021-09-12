@@ -41,21 +41,9 @@ class Card
 		return $this->title;
 	}
 
-	public function setTitle(string $title): void
-	{
-		$this->title = $title;
-		$this->pushEvent('card:update:title');
-	}
-
 	public function getPower(): int
 	{
 		return $this->power;
-	}
-
-	public function setPower(int $power): void
-	{
-		$this->power = $power;
-		$this->pushEvent('card:update:power');
 	}
 
 	public function isDeleted(): bool
@@ -70,6 +58,17 @@ class Card
 		$event->setCardTitle($this->title);
 		$event->setCardPower($this->power);
 		$this->events[] = $event;
+	}
+
+	public function update(CardEditDTO $dto) {
+		if (null !== ($title = $dto->getTitle())) {
+			$this->title = $title;
+			$this->pushEvent('card:update:title');
+		}
+		if (null !== ($power = $dto->getPower())) {
+			$this->power = $power;
+			$this->pushEvent('card:update:power');
+		}
 	}
 
 	public function getCard()

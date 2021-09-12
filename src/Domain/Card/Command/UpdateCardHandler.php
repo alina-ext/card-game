@@ -40,12 +40,7 @@ class UpdateCardHandler implements CommandHandler
 		$model = $this->repository->getById(
 			$this->uuidGenerator->toString($dto->getId())
 		);
-		if (null !== ($title = $dto->getTitle())) {
-			$model->setTitle($title);
-		}
-		if (null !== ($power = $dto->getPower())) {
-			$model->setPower(intval($power));
-		}
+		$model->update($dto);
 
 		$this->repository->save($model);
 		$model->dispatch($this->eventRepository, $this->eventBus);
