@@ -12,8 +12,8 @@ class Response implements Payload
 	private int $power;
 	private int $amount;
 	private bool $isDeleted;
-	private string $originalTitle;
-	private int $originalPower;
+	private ?string $originalTitle;
+	private ?int $originalPower;
 
 	public function setId(string $id): void
 	{
@@ -35,12 +35,12 @@ class Response implements Payload
 		$this->amount = $amount;
 	}
 
-	public function setOriginalTitle(string $title): void
+	public function setOriginalTitle(?string $title): void
 	{
 		$this->originalTitle = $title;
 	}
 
-	public function setOriginalPower(int $power): void
+	public function setOriginalPower(?int $power): void
 	{
 		$this->originalPower = $power;
 	}

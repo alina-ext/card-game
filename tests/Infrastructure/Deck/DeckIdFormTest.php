@@ -1,42 +1,36 @@
 <?php
-declare(strict_types=1);
 
-namespace App\Tests\Infrastructure\Card;
+namespace App\Tests\Infrastructure\Deck;
 
-use App\Domain\Card\CardDTO;
-use App\Infrastructure\Card\CardForm;
+use App\Domain\Deck\DeckIdDTO;
 use App\Infrastructure\Common\Generator\UuidGenerator;
+use App\Infrastructure\Deck\DeckIdForm;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Uid\Uuid;
 
-class CardFormTest extends TypeTestCase
+class DeckIdFormTest extends TypeTestCase
 {
 	private UuidGenerator $uuidGenerator;
 
 	public function testBuildForm()
 	{
-		$formData = $this->createCardDTO();
-
+		$formData = $this->createDeckDTO();
 		$view = $this->factory
-			->create(CardForm::class, $formData)
+			->create(DeckIdForm::class, $formData)
 			->createView();
 
 		$dataForm = $view->vars['value'];
 
-		$this->assertEquals($view->count(), 3);
+		$this->assertEquals($view->count(), 1);
 		$this->assertArrayHasKey('id', $view);
-		$this->assertArrayHasKey('title', $view);
-		$this->assertArrayHasKey('power', $view);
 
 		$this->assertEquals($formData, $dataForm);
 	}
 
-	private function createCardDTO(): CardDTO
+	private function createDeckDTO(): DeckIdDTO
 	{
-		$dto = new CardDTO();
+		$dto = new DeckIdDTO();
 		$dto->setId($this->generateUUID());
-		$dto->setTitle('testCard');
-		$dto->setPower(10);
 
 		return $dto;
 	}

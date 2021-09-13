@@ -22,12 +22,14 @@ class CardIdFormTest extends TypeTestCase
 
 		$dataForm = $view->vars['value'];
 
+		$this->assertEquals($view->count(), 1);
 		$this->assertArrayHasKey('id', $view);
 
-		$this->assertEquals($formData->getId(), $dataForm->getId());
+		$this->assertEquals($formData, $dataForm);
 	}
 
-	public function createCardDTO(): CardIdDTO {
+	public function createCardDTO(): CardIdDTO
+	{
 		$dto = new CardIdDTO();
 		$dto->setId($this->generateUUID());
 

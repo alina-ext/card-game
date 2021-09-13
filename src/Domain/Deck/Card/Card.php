@@ -13,15 +13,29 @@ class Card
 	private ?string $originalTitle;
 	private ?int $originalPower;
 
-	public function __construct(string $id, string $title, int $power, int $amount, bool $deleted = false, string $originalTitle = null, int $originalPower = null)
+	private function __construct(string $id, string $title, int $power, int $amount)
 	{
 		$this->id = $id;
 		$this->title = $title;
 		$this->power = $power;
 		$this->amount = $amount;
+		$this->deleted = false;
+		$this->originalTitle = null;
+		$this->originalPower = null;
+	}
+
+	public static function createCard(string $id, string $title, int $power, int $amount) {
+		return new self($id, $title, $power, $amount);
+	}
+
+	public function setOriginalData(bool $deleted, ?string $title = null, ?int $power = null) {
 		$this->deleted = $deleted;
-		$this->originalTitle = $originalTitle;
-		$this->originalPower = $originalPower;
+		if (null !== $title) {
+			$this->originalTitle = $title;
+		}
+		if (null !== $power) {
+			$this->originalPower = $power;
+		}
 	}
 
 	public function getId(): string

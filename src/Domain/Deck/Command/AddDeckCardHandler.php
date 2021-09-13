@@ -45,7 +45,7 @@ class AddDeckCardHandler implements CommandHandler
 		$deckModel = $this->repository->getById($this->uuidGenerator->toString($dto->getDeckId()));
 
 		$cardModel = $this->cardRepository->getById($this->uuidGenerator->toString($dto->getCardId()));
-		$cardDto = new Card($cardModel->getId(), $cardModel->getTitle(), $cardModel->getPower(), $dto->getAmount());
+		$cardDto = Card::createCard($cardModel->getId(), $cardModel->getTitle(), $cardModel->getPower(), $dto->getAmount());
 
 		$deckModel->addCard($cardDto);
 

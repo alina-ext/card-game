@@ -83,6 +83,6 @@ class DeckRepository extends ServiceEntityRepository implements IDeckRepository
 			throw new NotFoundException(sprintf("No deck with id %s exists", $id));
 		}
 
-		return new DeckModel($deck->getId(), $deck->getUserId(), $this->deckCardRepository->getByDeckId($id));
+		return DeckModel::buildDeck($deck->getId(), $deck->getUserId(), $this->deckCardRepository->getByDeckId($id));
 	}
 }

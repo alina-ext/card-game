@@ -38,11 +38,9 @@ class AddDeckHandler implements CommandHandler
 		$dto = $command->getDto();
 		$this->validator->validate($dto);
 
-		$model = new Deck(
+		$model = Deck::createDeck(
 			$this->uuidGenerator->toString($dto->getId()),
 			$this->uuidGenerator->toString($dto->getUserId()),
-			[],
-			true
 		);
 
 		$this->repository->save($model);

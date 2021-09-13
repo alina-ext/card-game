@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Deck\Command;
 
-use App\Domain\Card\CardRepository;
 use App\Domain\Deck\DeckRepository;
 use App\Infrastructure\Common\Command\CommandHandler;
 use App\Infrastructure\Common\Event\EventBus;
@@ -14,7 +13,6 @@ use App\Infrastructure\ValidatorInterface;
 class DeleteDeckHandler implements CommandHandler
 {
 	private DeckRepository $repository;
-	private CardRepository $cardRepository;
 	private ValidatorInterface $validator;
 	private GeneratorInterface $uuidGenerator;
 	private EventRepository $eventRepository;
@@ -22,14 +20,12 @@ class DeleteDeckHandler implements CommandHandler
 
 	public function __construct(
 		DeckRepository $repository,
-		CardRepository $cardRepository,
 		ValidatorInterface $validator,
 		GeneratorInterface $uuidGenerator,
 		EventRepository $eventRepository,
 		EventBus $eventBus)
 	{
 		$this->repository = $repository;
-		$this->cardRepository = $cardRepository;
 		$this->validator = $validator;
 		$this->uuidGenerator = $uuidGenerator;
 		$this->eventRepository = $eventRepository;

@@ -45,11 +45,4 @@ class UpdateCardHandler implements CommandHandler
 		$this->repository->save($model);
 		$model->dispatch($this->eventRepository, $this->eventBus);
 	}
-
-	public static function getHandledMessages(): iterable
-	{
-		yield UpdateCardCommand::class => [
-			'method' => '__invoke'
-		];
-	}
 }

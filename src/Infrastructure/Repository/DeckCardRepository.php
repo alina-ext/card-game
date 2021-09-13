@@ -37,16 +37,18 @@ class DeckCardRepository extends ServiceEntityRepository implements IDeckCardRep
 		$result = [];
 		foreach ($cards as $card) {
 			$id = $card->getCardId();
-			$bExists = array_key_exists($id, $originalCards);
-			$result[$id] = new Card(
+			$result[$id] = Card::createCard(
 				$id,
 				$card->getTitle(),
 				$card->getPower(),
 				$card->getAmount(),
-				!$bExists,
-				$bExists ? $originalCards[$id]->getTitle() : null,
-				$bExists ? $originalCards[$id]->getPower() : null,
 			);
+			if (array_key_exists($id, $originalCards)) {
+				$result[$id]->setOriginalData(false, $originalCards[$id]->getTitle(), $originalCards[$id]->getPower());
+			} else {
+				$result[$id]->setOriginalData(true);
+			}
+
 		}
 
 		return $result;

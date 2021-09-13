@@ -7,9 +7,9 @@ use App\Infrastructure\Payload;
 
 class ResponseCatalog implements Payload
 {
-	private array $items;
-	private ?string $prev;
-	private ?string $next;
+	private array $items = [];
+	private ?string $prev = null;
+	private ?string $next = null;
 
 	/**
 	 * @param Card[] $items

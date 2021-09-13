@@ -20,21 +20,30 @@ class Deck
 
 	private string $id;
 	private string $userId;
-	private bool $deleted = false;
+	private bool $deleted;
 	/** @var DomainEvent[] */
 	private array $events;
 	/** @var Card[] */
 	private array $cards;
 
-	public function __construct(string $id, string $userId, array $cards = [], bool $addEvent = false)
+	private function __construct(string $id, string $userId, array $cards = [])
 	{
 		$this->id = $id;
 		$this->userId = $userId;
 		$this->events = [];
 		$this->cards = $cards;
-		if ($addEvent) {
-			$this->pushDeckEvent('deck:add');
-		}
+		$this->deleted = false;
+	}
+
+	public static function createDeck(string $id, string $userId): Deck {
+		$deck = self::buildDeck($id, $userId);
+		$deck->pushDeckEvent('deck:add');
+
+		return $deck;
+	}
+
+	public static function buildDeck(string $id, string $userId, array $cards = []): Deck {
+		return new self($id, $userId, $cards);
 	}
 
 	private function pushDeckEvent(string $title)
