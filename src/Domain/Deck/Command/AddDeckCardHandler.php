@@ -49,7 +49,7 @@ class AddDeckCardHandler implements CommandHandler
 
 		$deckModel->addCard($cardDto);
 
-		$this->repository->saveCard($deckModel);
+		$this->repository->saveAggregateCards($deckModel);
 		$deckModel->dispatch($this->eventRepository, $this->eventBus);
 	}
 }

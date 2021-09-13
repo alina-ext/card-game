@@ -15,7 +15,7 @@ interface DeckRepository
 	/**
 	 * @param DeckModel $deck
 	 */
-	public function saveCard(DeckModel $deck): void;
+	public function saveAggregateCards(DeckModel $deck): void;
 
 	/**
 	 * @param string $id

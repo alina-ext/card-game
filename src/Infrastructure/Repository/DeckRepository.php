@@ -51,7 +51,7 @@ class DeckRepository extends ServiceEntityRepository implements IDeckRepository
 	/**
 	 * {@inheritDoc}
 	 */
-	public function saveCard(DeckModel $deck): void
+	public function saveAggregateCards(DeckModel $deck): void
 	{
 		$deckCurrentState = $this->getById($deck->getId());
 		$cardsCurrentState = $deckCurrentState->getCards();

@@ -41,7 +41,7 @@ class DeleteDeckCardHandler implements CommandHandler
 
 		$deckModel->deleteCards($this->uuidGenerator->toString($dto->getCardId()), $dto->getAmount());
 
-		$this->repository->saveCard($deckModel);
+		$this->repository->saveAggregateCards($deckModel);
 		$deckModel->dispatch($this->eventRepository, $this->eventBus);
 	}
 }

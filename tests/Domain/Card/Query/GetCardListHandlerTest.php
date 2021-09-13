@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Tests\Domain\Card\Query;
 
@@ -75,7 +76,7 @@ class GetCardListHandlerTest extends TestCase
 			$this->paginationService
 		);
 
-		$response = $handler($query);
+		$handler($query);
 	}
 
 	/**
