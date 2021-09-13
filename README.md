@@ -35,19 +35,10 @@ The API exposes methods to:
   
 * API available on `http://127.0.0.1:8888`
 
-## To run tests
-* Get get container id
-    ```sh
-    docker ps
-    ```
-* Get into container with id from previous step
-    ```sh
-    docker exec -ti <<your_id_here>> /bin/sh
-    ```
-* Enter `/var/www/catalog` and run
-    ```sh
-    php vendor/bin/phpunit --configuration phpunit.xml.dist
-    ```
+* To run tests
+  ```sh
+  docker-compose exec php /var/www/html/vendor/bin/phpunit --configuration phpunit.xml.dist
+  ```
 
 ## Notes
 * nginx works on `8888` port
@@ -60,4 +51,4 @@ If they are busy change them in `docker-compose.yml`
 * [Requests](doc/requests.md)
 
 ## Design marks
-* [Architecture](doc/arhitecture.md)
+* [Architecture](doc/arhitercture.md)

@@ -1,3 +1,4 @@
+## Arhitercture
 ![alt text](diagram.png)
 
 Application designed as 2 APIs:
