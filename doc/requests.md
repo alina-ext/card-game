@@ -217,6 +217,13 @@
     * `changes` contains data about card original fields that differ from the one in deck. It means that card was changed after adding to deck. For ex. `{"title": "new title"}` says than new card title in catalog is `new title`
     * `is_deleted` `true` means that card was deleted from catalog but presents in deck
 
+   If deck doesn't exit will return 404 status code with body
+    ```json
+    {
+      "message": "No deck with id 5058a6e6-1840-4f24-8f5d-0f151b3b3bfa exists"
+    }
+    ```
+
 5. **Delete deck** with all cards
 
    Method
